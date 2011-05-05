@@ -53,7 +53,8 @@ little things that concern him." tal:attributes="content here/getMetaDescription
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-94373-1']);
   _gaq.push(['_trackPageview']);
-
+  _gaq.push(['_trackPageLoadTime']);
+  
   (function() {
     var ga = document.createElement('script');
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
