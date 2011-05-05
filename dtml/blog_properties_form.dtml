@@ -1,0 +1,196 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Edit')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+
+
+
+
+<form action="<dtml-var URL1>/" method="post" name="blogp">
+
+<table border="0">
+<tr><td valign="top">
+
+<table border="0">
+
+<tr><th>Title:</th>
+    <td><input type="text" name="title" size="40" value="<dtml-var title
+html_quote>">
+    <small>Remember to use <code>&lt;!--split--&gt;</code></small></td> 
+</tr>
+
+<tr><th>Alias:</th>
+    <td><input type="text" name="alias" size="40" value="<dtml-var getAlias html_quote>">
+    <input type="button" value="suggest"
+
+onClick="javascript:document.blogp['alias'].value=document.blogp['title'].value;">
+    </td> 
+</tr>
+
+<tr><td colspan="2">
+<textarea id="text" name="text" cols="85" rows="19"><dtml-var text html_quote></textarea>
+</td>
+</tr>
+
+
+<tr><td colspan="2"><input type="submit" name="manage_editBlogItem:method"
+value=" Save changes " onclick="this.value='Saving changes...'" />
+
+		</td></tr>
+                
+                
+</table>
+
+<em>Optional summary:</em><br/>
+<textarea name="summary" cols="85" rows="3"><dtml-var getSummary></textarea><br/>
+<dtml-unless getSummary>
+<p style="font-size:70%;width:500px">
+Current default meta description is:<br/>
+<em><dtml-var getMetaDescription></em>
+</p>
+</dtml-unless>
+
+</td>
+<td valign="top">
+<p>&nbsp;</p>
+<p style="font-size:80%">
+
+<b>Publish date:</b>
+    <br /><input type="text" name="pub_date:date" size="25"
+    value="<dtml-var pub_date>">
+<br />        
+
+<b>URL:</b>
+    <br /><input type="text" name="url" size="50" value="<dtml-var url>" />
+<br />
+
+<b>Bookmark:</b>
+  <input type="checkbox" name="bookmark"  value="1"
+         <dtml-if "isBookmark()">checked="checked"</dtml-if>/> <small>then not included in RSS feed</small>
+<br/>
+
+<b>Display format:</b>
+    <br />
+	<select name="display_format">
+	<option value=""
+	<dtml-if "display_format==''">selected="selected"</dtml-if>
+	>---------</option>
+	<option value="structuredtext"
+	<dtml-if "display_format=='structuredtext'">selected="selected"</dtml-if>
+	>Structured Text</option>
+	<option value="html"
+	<dtml-if "display_format=='html'">selected="selected"</dtml-if>
+	>HTML</option>
+	<option value="texmix"
+	<dtml-if "display_format=='texmix'">selected="selected"</dtml-if>
+	>TeXMiX</option>
+	
+	</select>
+<br />
+
+<b>Code syntax:</b>
+    <br />
+        <dtml-let default="getCodeSyntaxDisplayFormat()">
+	<select name="codesyntax_display_format">
+	<option value=""
+	<dtml-if "REQUEST.get('codesyntax_display_format',default)==''">selected="selected"</dtml-if>
+	>---------</option>
+	<option value="cpp"
+	<dtml-if "REQUEST.get('codesyntax_display_format',default)=='cpp'">selected="selected"</dtml-if>
+	>C++</option>
+	<option value="python"
+	<dtml-if "REQUEST.get('codesyntax_display_format',default)=='python'">selected="selected"</dtml-if>
+	>Python</option>
+	<option value="sql"
+	<dtml-if "REQUEST.get('codesyntax_display_format',default)=='sql'">selected="selected"</dtml-if>
+	>SQL</option>
+	<option value="xml"
+	<dtml-if "REQUEST.get('codesyntax_display_format',default)=='xml'">selected="selected"</dtml-if>
+	>XML/HTML</option>
+	<option value="css"
+	<dtml-if "REQUEST.get('codesyntax_display_format',default)=='css'">selected="selected"</dtml-if>
+	>CSS</option>
+	
+	</select>
+	</dtml-let>
+<br />
+<b>Categories</b><br />
+	<select name="itemcategories:list" size="<dtml-var "_.min(9, _.len(getCategories(only='id')))">" multiple="multiple">
+	<dtml-in "getCategories(only='id')">
+	<option value="<dtml-var sequence-item>"
+	<dtml-if "_['sequence-item'] in itemcategories">selected="selected"</dtml-if>
+	><dtml-var sequence-item></option>
+	</dtml-in>
+	</select>
+
+<br />
+
+<dtml-comment>'author_options' is potentially a property set in the aq path</dtml-comment>
+<dtml-if author_options>
+<b>Author</b><br />
+	<select name="author">
+	<dtml-let preval="getAuthor()">
+	<dtml-in author_options>
+	<option value="<dtml-var sequence-item>"
+	<dtml-if "_['sequence-item'] == preval">selected="selected"</dtml-if>
+	><dtml-var sequence-item></option>
+	</dtml-in>
+	</dtml-let>
+	</select>
+<br />
+</dtml-if>
+
+
+<dtml-if "display_format=='texmix'">
+<form action="manage_prepareTexMix">
+Recreate: <input type="checkbox" name="recreate:int" value="1" /><br />
+<input type="submit" value="Prepare TexMix">
+<br />
+</form>
+<br />
+</dtml-if>
+
+
+<dtml-if "REQUEST.has_key('spellingsuggestions')">
+<dtml-in getSpellingSuggestions mapping>
+
+<dtml-if sequence-start>
+ <table cellpadding=1>
+</dtml-if>
+
+ <tr>
+  <td colspan=2><strong><dtml-var word></strong>
+   <span style="font-size:80%;color:#666666;"><dtml-var count> occurances</span></td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td><dtml-in suggestions><a href="javascript:;" onClick="javascript:strReplacer('<dtml-var
+word>','<dtml-var sequence-item>')"><dtml-var sequence-item></a><dtml-unless
+sequence-end>, </dtml-unless></dtml-in></td>
+ </tr>
+
+ 
+<dtml-if sequence-end></table></dtml-if>
+
+<dtml-else>
+  <em>No spelling misstakes detected</em>
+  
+</dtml-in>
+
+</dtml-if>
+
+</td></tr>
+</table>
+
+</form>
+
+<p style="font-size:80%">(Normal <a href="manage_propertiesForm">Properties
+form</a>)</p>
+
+<dtml-var manage_page_footer>

@@ -1,0 +1,20 @@
+<style>
+td.caldate {
+  font-size: 80%;
+  text-align:top;
+}
+</style>
+
+<dtml-calendar theme=yb weekdays=17 tablewidth="'100%'" controls="no" images="no">
+
+
+<dtml-var "_.int(date.strftime('%d'))"><br />
+
+<dtml-in "getBlogItemsByDate(date, pub_date_filter=1)">
+<li><a href="<dtml-var absolute_url>"><dtml-var getTitle></a></li>
+<dtml-unless sequence-end><br /></dtml-unless>
+</dtml-in>
+
+
+</dtml-calendar>
+

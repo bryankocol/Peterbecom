@@ -1,0 +1,58 @@
+<HTML> 
+<HEAD><TITLE>Add MMS Message</TITLE>
+<link rel="stylesheet" type="text/css" href="/manage_page_style.css">
+</HEAD> 
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555"> 
+<H2>Add Peterbecom MMS Message</H2>
+
+
+<form action="manage_addMMSMessage" method="post"
+enctype="multipart/form-data">
+<dtml-if GoToURL>
+ <input type=hidden name=GoToURL value="<dtml-var GoToURL>">
+</dtml-if>
+<table border=0> 
+<tr><th>Id:</th> 
+    <td><input type=text name=id size="40" value="<dtml-var
+"ZopeTime().strftime('mms-%Y%m%d-%H%M%S')">"></td>
+</tr>
+
+<tr><th>Title:</th>
+    <td><input type=text name=title size="40" value="MMS Message"></td> 
+</tr>
+
+<tr><th>Sender:</th>
+    <td><input type=text name=sender size="40" value="Peter"></td> 
+</tr>
+
+
+<tr><th>Comment:</th>
+    <td><textarea name="message" cols="50" rows="10"></textarea></td>
+</tr>
+
+<tr><th>Publish date:</th>
+    <td><input type=text name=pub_date size="40" 
+    value="<dtml-var ZopeTime>"></td> 
+</tr>
+
+
+<tr><th>Moderated:</th>
+    <td><input type=checkbox name="moderated:int" 
+    value="1" checked></td> 
+</tr>
+
+
+<tr><th>Report change:</th>
+    <td><input type=checkbox name="reportchange:int"
+    value="1" checked></td>
+</tr>
+
+<tr><th>Photo:</th>
+    <td><input type=file name="file" size="30"></td>
+</tr>
+
+
+<tr><td></td><td><input type=submit value=" Add "></td></tr> 
+</table></form> 
+</body></html> 
+

@@ -1,0 +1,39 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Management')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<dtml-var "ManagementTabs('Top Search Terms')">
+
+<p class="form-title">Top Search Terms</p>
+
+<dtml-unless "REQUEST.has_key('limit')">
+  <dtml-call "REQUEST.set('limit',20)">
+</dtml-unless>
+
+
+<form action="manage_TopSearchTerms">
+<input name="limit:int" value="<dtml-var "REQUEST.get('limit',10)">"
+size=2><input type="submit" value="Change limit">
+
+</form>
+
+<table border=0 cellpadding="0">
+  <dtml-in "getTopSearchTerms(limit=REQUEST.get('limit',10))">
+  <tr <dtml-if sequence-start>style="font-weight:bold"</dtml-if>>
+    <td><dtml-var sequence-number>&nbsp;</td>
+    <td style="font-size:90%;font-family:Arial,Verdana"><dtml-var searchterm>&nbsp;</td>
+    <td><dtml-var count></td>
+    <td><a href="http://www.google.com/search?q=<dtml-var searchterm url_quote_plus>"
+    style="font-size:70%">Google this</a></td>
+  </tr>
+  </dtml-in>  
+</table>
+
+<br />&nbsp;
+<dtml-var manage_page_footer>

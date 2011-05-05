@@ -1,0 +1,179 @@
+<html metal:use-macro="here/getHeader">
+
+<style type="text/css" metal:fill-slot="extracss">
+
+div.item {
+  padding:5px;
+  border-bottom:1px solid #ccc;
+  width:500px;
+}
+
+div.item a.thumbnail {
+  float:left;
+  padding-right:20px;
+}
+
+div.item a.pan-to {
+  float:right;
+  font-size:80%;
+  font-weight:bold;
+  text-decoration:none;
+}
+</style>
+
+
+<metal:script fill-slot="extrajs">
+<script tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=${here/GOOGLEMAPS_API_KEY}" type="text/javascript"></script>
+<script tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/jquery-1.2.3.min.js')" type="text/javascript"></script>
+<script type="text/javascript">
+
+function panTo(i) {
+  window.setTimeout(function() {
+    var marker = markers[i];
+    map.panTo(marker.getPoint());
+  }, 0.5*1000);
+}
+
+var map = null;
+var geocoder = null;
+var x,y;
+var overlay_made = null;
+function load(x, y, zoom_level) {
+   if (zoom_level === null)
+     zoom_level = 13;
+   if (GBrowserIsCompatible()) {
+      map = new GMap2(document.getElementById("map"));
+      map.addControl(new GSmallMapControl());
+      map.setCenter(new GLatLng(x, y), 11);
+      geocoder = new GClientGeocoder();
+   } else {
+      alert("Sorry, your browser is unable to display a map in your browser");
+   }
+}
+
+function showAddress(address) {
+   if (geocoder) {
+      geocoder.getLatLng(address,  function(point) {
+         $('#close-tip').show(500);
+         if (!point) {
+            alert("Sorry, " + address + " not found");
+         } else {
+            map.setCenter(point, 13);
+            var marker = new GMarker(point);
+            map.addOverlay(marker);
+            //marker.openInfoWindowHtml(address);
+         }
+      })};
+}
+
+
+function resizeMapTaller() { __resizeMap(null, +50); return false; };
+function resizeMapShorter() { __resizeMap(null, -50); return false; };
+function resizeMapWider() { __resizeMap(+50, null); return false; };
+function resizeMapNarrower() { __resizeMap(-50, null); return false; };
+
+function __resizeMap(new_width, new_height) {
+   var o = $('#map');
+   var old_width = o.css('width');
+   if (new_width !== null) {
+      o.css('width', (parseInt(old_width) + new_width)+'px');
+   }      
+   var old_height = o.css('height');
+   if (new_height !== null) {
+      o.css('height', (parseInt(old_height) + new_height)+'px');
+   }
+   $.post('rememberGoogleMapSize', {width:o.css('width'), height:o.css('height')});
+}
+
+
+
+jQuery(function() {
+   // trafalgar square, London:
+   var default_x = 51.5087157485;
+   var default_y = -0.128424167633;
+   
+   var geocode_x, geocode_y;
+   if ($('#id_default_geocode_x').size() && $('#id_default_geocode_y').size())
+     if ($('#id_default_geocode_x').val() && $('#id_default_geocode_y').val()) {
+        geocode_x = parseFloat($('#id_default_geocode_x').val());
+        geocode_y = parseFloat($('#id_default_geocode_y').val());
+     }
+   
+   if (geocode_x && geocode_y) {
+      load(geocode_x,  geocode_y);
+      if (geocoder) {
+         geocoder.getLatLng(geocode_x+','+geocode_y, function(point) {
+            if (point) {
+               map.setCenter(point, 13);
+               var marker = new GMarker(point);
+               map.addOverlay(marker);
+            }
+         });
+      } 
+   } else {
+      load(default_x,  default_y);
+   }
+   
+   if ($('input[name="address"]').val()) {
+      showAddress($('input[name="address"]').val());
+   }
+});
+
+window.onunload = GUnload;
+</script>
+
+</metal:script>
+
+<div metal:fill-slot="body">
+
+      <table>
+        <tr>
+	  <td>
+	    <div id="map" style="width: 800px; height: 600px"
+	         tal:define="size python:here.getGoogleMapSize(default_width=800, default_height=600, as_dict=True)"
+	         tal:attributes="style string:width: ${size/width}px;; height: ${size/height}px"></div>
+	  </td>
+	  <td valign="bottom">
+ 	    <a href="#" onclick="return resizeMapShorter()" class="arrow">&uarr;</a><br />
+	    <a href="#" onclick="return resizeMapTaller()" class="arrow">&darr;</a>
+	  </td>
+	</tr>
+	<tr>
+	  <td align="right">
+	    <a href="#" onclick="return resizeMapNarrower()" class="arrow">&larr;</a>
+	    <a href="#" onclick="return resizeMapWider()" class="arrow">&rarr;</a>
+	  </td>
+	  <td>&nbsp;</td>
+	</tr>
+      </table>
+      
+      <div tal:define="items python:here.getLastOutandaboutItems();
+                       global last_date here/ZopeTime">
+      <script tal:content="structure python:here.addOutandaboutItems_js(items, as_array=True)" type="text/javascript"></script>
+      
+        <div class="item" tal:repeat="item items">
+          <a class="pan-to" href="#" tal:attributes="onclick string:panTo(${repeat/item/index});;return false">show on map</a>
+          <a class="thumbnail"
+             tal:attributes="href item/absolute_url_path; title item/title"
+             tal:content="structure python:item.tag(display='tiny', border='0')"></a>
+          <a tal:attributes="href item/absolute_url_path; title item/title"
+             tal:content="item/title"></a><br />
+	     
+	  <span tal:condition="repeat/item/start">
+	    <br tal:replace="python:here.timeSince(item.getPubDate(), last_date, minute_granularity=True, max_no_sections=2, afterword='ago')" />
+	  </span>
+	  
+	  <span tal:condition="not:repeat/item/start">
+	    <br tal:replace="python:here.timeSince(item.getPubDate(), last_date, minute_granularity=True, max_no_sections=2, afterword='later')" />
+	  </span>	  
+
+          <br tal:define="global last_date item/getPubDate" 
+	     style="clear:left" />
+        </div>
+      
+      </div>
+
+
+</div>
+
+</html>

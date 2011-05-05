@@ -1,0 +1,44 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Management')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<dtml-var "ManagementTabs('Search Referers Progress')">
+
+<p class="form-title">Search Referers Progress</p>
+
+<dtml-unless "REQUEST.has_key('delta')">
+  <dtml-call "REQUEST.set('delta',2)">
+</dtml-unless>
+
+
+<form action="manage_SearchReferersProgress">
+<input name="delta:int" value="<dtml-var "REQUEST.get('delta',2)">"
+size=2><input type="submit" value="Change dayspan">
+
+</form>
+
+<table border=0 cellpadding="0">
+  <dtml-let data="getSearchRefererCounts(getFirstSearchRefererDate(), getLastSearchRefererDate(), REQUEST.get('delta',2))"
+   counts="data[0]" smallest="data[1]">
+  <dtml-in counts>
+  <tr>
+    <td style="font-size:70%" width="50"><dtml-var sequence-item></td>
+    <td><img
+src="/misc_/Peterbecom/pixel.gif"
+width="<dtml-var "_['sequence-item']-smallest+1">"
+height="17" alt="<dtml-var sequence-item>"
+valign="bottom" 
+hspace="0" border="0" /></td>
+  </tr>
+  </dtml-in>
+  </dtml-let>
+</table>
+
+<br>&nbsp;
+<dtml-var manage_page_footer>

@@ -1,0 +1,34 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Management')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<dtml-var "ManagementTabs('Alias Map')">
+
+<p class="form-title">Alias Map</p>
+
+<form action="manage_saveAliasMap" method="post">
+<dtml-in "getAliasMap().items()">
+<dtml-var sequence-number>
+<input name="aliases:list" value="<dtml-var sequence-key>" size="30"> &gt; <input
+name="paths:list" value="<dtml-var sequence-item>" size="30"> <input
+type="checkbox" name="delete_aliases:list" value="<dtml-var sequence-key>">
+<br>
+
+<dtml-if sequence-end>
+  <br>
+  <input type="submit" value="   Save   ">
+  <input type="submit" name="delete" value="Delete selected">
+</dtml-if>
+</dtml-in>
+
+</form>
+
+
+<br>&nbsp;
+<dtml-var manage_page_footer>

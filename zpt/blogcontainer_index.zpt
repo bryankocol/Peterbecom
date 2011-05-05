@@ -1,0 +1,45 @@
+<br tal:replace="nothing" tal:define="dummy python:request.RESPONSE.setHeader('Expires', here.ZopeTime(here.ZopeTime().timeTime()+int(7*60*60)).rfc822())" />
+<html metal:use-macro="here/getHeader">
+<div metal:fill-slot="body">
+
+
+<h3>Categories</h3>
+<span tal:define="cats python:here.getCategories(only='dict'); url_quote_plus nocall:modules/Products/PythonScripts/standard/url_quote_plus"
+tal:omit-tag="">
+
+<span tal:repeat="cat cats" tal:omit-tag="">
+ <a tal:define="cat_uqp python:url_quote_plus(cat['id'])" 
+ tal:attributes="href string:/oc-${cat_uqp}"><img
+ tal:replace="structure python:cat['image'].tag(hspace=10, vspace=5, border='0')"
+/></a>
+
+ <br tal:define="index repeat/cat/index"
+     tal:condition="not:python:(index+1)%8"/>  
+
+</span>
+</span>
+
+<h3>Calendar</h3>
+
+<br tal:replace="structure here/blogcontainer_calendar" />
+
+<h3>All items</h3>
+
+<br tal:define="global previous_pub_date1 nothing" tal:replace="nothing" />
+
+<span tal:repeat="blogitem python:here.plog.getBlogItems(oc=0)" tal:omit-tag="">
+ <span tal:condition="python:previous_pub_date1 != blogitem.getPubDate().strftime('%Y%m')" tal:omit-tag="">
+   <span tal:define="global previous_pub_date1 python:blogitem.getPubDate().strftime('%Y%m')"
+    tal:replace="nothing" />
+   <a tal:attributes="name python:'a'+blogitem.getPubDate().strftime('%Y%m')"></a>
+   <br><strong tal:content="python:blogitem.getPubDate().strftime('%B, %Y')"></strong><br>
+ </span>
+ <a href="" tal:define="pubdate python:blogitem.getPubDate().strftime('%d %b %Y')"
+  tal:attributes="href python:here.slimURL(blogitem.alias_absolute_url()); title string:Published on ${pubdate}" 
+  tal:content="structure blogitem/title_or_id">x</a><br>
+</span>
+</div>
+</html>
+
+
+

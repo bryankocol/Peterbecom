@@ -1,0 +1,48 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Got here')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<h3>Got here</h3>
+
+<h4><dtml-var getTitle></h4>
+
+<dtml-unless "REQUEST.has_key('limit')">
+  <dtml-call "REQUEST.set('limit',40)">
+</dtml-unless>
+
+<style>
+.odd{font-size:80%;background-color:#efefef;}
+.even{font-size:80%;}
+</style>
+<dtml-in "getGotHereRecords(REQUEST.get('limit'))">
+<dtml-if sequence-start>
+  <p><em>#<dtml-var sequence-length> referers</em></p>
+  <table>
+    <tr bgcolor="#CCCCCC">
+      <th>From</th>
+      <th>Count</th>
+    </tr>
+</dtml-if>
+
+  <tr class="<dtml-if sequence-odd>odd<dtml-else>even</dtml-if>">
+    <td><a href="<dtml-var combined>"><dtml-var "showNiceReferer(combined, 70)"></a></td>
+    <td><dtml-var count></td>
+  </tr>
+
+
+<dtml-if sequence-end>
+  </table>
+</dtml-if>
+
+<dtml-else>
+  <em>None yet.</em>
+</dtml-in>
+
+
+<dtml-var manage_page_footer>

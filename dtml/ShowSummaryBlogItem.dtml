@@ -1,0 +1,46 @@
+<dtml-unless "isMobileVersion()">
+<dtml-if "isBookmark()">
+<img src="<dtml-var "getMiscAlias('/misc_/Peterbecom/misc/bookmark.png')">" style="float:right" alt="Peterbe.com Bookmark" />
+<dtml-else>
+<dtml-var "ShowBlogItemCategories()">
+</dtml-if>
+</dtml-unless>
+
+<dtml-if "isBookmark()">
+<h4 class="btitle" style="margin-bottom:1px"><dtml-var title html_quote></h4>
+
+<dtml-if "isYouTubeURL()">
+  <dtml-var "getYouTubeEmbedTag(width=425)">
+  <br/>
+<dtml-elif "isImageURL()">
+  <p style="text-align:center"><a href="<dtml-var getURL>"><dtml-var "showImageURLTag()"></a></p>
+</dtml-if>
+<dtml-var "showURL(maxlength=50,title=getTitle())">&nbsp;
+
+  <div class="text">
+    <dtml-let textAsplit="showText(split=1)">
+    <dtml-var "textAsplit[0]">
+    </dtml-let>
+  </div>
+
+<dtml-else>
+<h4 class="btitle"><dtml-if "URL1!=absolute_url()"><a href="<dtml-var "slimURL(alias_absolute_url())">"><dtml-var title html_quote></a><dtml-else><dtml-var title html_quote></dtml-if></h4>
+
+<dtml-unless "isBookmark()">
+<div style="float:right">
+<a class="burl" href="<dtml-var "slimURL(alias_absolute_url())">#comments"><dtml-var "countComments()"> comments</a>
+</div>
+</dtml-unless>
+
+
+<div class="text">
+  <dtml-let textAsplit="showText(split=1)">
+  <dtml-var "textAsplit[0]">
+  <dtml-if "textAsplit[1]">
+    <br /><dtml-unless isMobileVersion><img src="<dtml-var "getMiscAlias('/misc_/Peterbecom/home/arrow.gif')">" width="9" height="11" alt="&gt;" border="0" /></dtml-unless>
+    <a href="<dtml-var "slimURL(alias_absolute_url())">">Read the whole text (<dtml-var "textAsplit[1]"> more words)</a>
+  </dtml-if>
+  </dtml-let>
+</div>
+
+</dtml-if>

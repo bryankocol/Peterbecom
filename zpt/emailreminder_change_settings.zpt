@@ -1,0 +1,132 @@
+<html metal:use-macro="here/getHeader">
+  <div metal:fill-slot="body">
+
+
+<form action="changesettings_web" method="post"
+ tal:attributes="action string:${here/absolute_url}/changesettings_web">
+
+
+<table border=0>
+<tr><td valign="top">
+
+<em><strong>Important bits</strong></em>
+<br>&nbsp;
+<!-- Important details -->
+<table>
+  <tr>
+    <td><strong>Email</strong></td>
+    <td>
+<input name="email" value="" size="30"
+ tal:attributes="value python:here.getEmail()">
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><strong>How often</strong>&nbsp;</td>
+    <td>every
+    <select name="dayskip:int" tal:define="ds here/getDayskip">
+    <option value="1"
+     tal:attributes="selected python:test(ds==1)">day</option>
+     
+    <option value="2"
+     tal:attributes="selected python:test(ds==2)">second day</option>
+     
+    <option value="3"
+     tal:attributes="selected python:test(ds==3)">third day</option>
+    <option value="4"
+     tal:attributes="selected python:test(ds==4)">fourth day</option>
+    <option value="5"
+     tal:attributes="selected python:test(ds==5)">fifth day</option>
+    <option value="6"
+     tal:attributes="selected python:test(ds==6)">sixth day</option>
+    <option value="7"
+     tal:attributes="selected python:test(ds==7)">week</option>
+    <option value="1" tal:repeat="i python:range(8, 14)"
+     tal:attributes="value i; selected python:test(i==ds)"
+     tal:content="string:${i} days">every day</option>
+    <option value="14"
+     tal:attributes="selected python:test(ds==14)">two weeks</option>
+     
+    <option value="1" tal:repeat="i python:range(15, 21)"
+     tal:attributes="value i; selected python:test(i==ds)"
+     tal:content="string:${i} days">every day</option>
+     
+    <option value="21"
+     tal:attributes="selected python:test(ds==21)">three weeks</option>
+     
+    <option value="1" tal:repeat="i python:range(22, 30)"
+     tal:attributes="value i; selected python:test(i==ds)"
+     tal:content="string:${i} days">every day</option>
+    <option value="30"
+      tal:attributes="selected python:test(ds==21)">month</option>
+    </select>
+    </td>
+  </tr>
+</table>
+
+
+<!-- /Important details -->
+
+</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td valign="top">
+
+<em><strong>Not so important bits</strong></em>
+<br>&nbsp;
+<!-- Less important details -->
+
+
+<table>
+  <tr>
+    <td><strong>Types</strong></td>
+    <td>
+    <table tal:define="mtypes here/getMetatypes">
+      <tr>
+        <td><input type="checkbox" name="meta_types:list"
+	     tal:attributes="CHECKED python:test('Peterbecom Blog Item' in mtypes)"
+	     value="Peterbecom Blog Item"></td>
+	<td>Blog items</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="meta_types:list"
+	     tal:attributes="CHECKED python:test('Peterbecom Photo' in mtypes)"
+	     value="Peterbecom Photo"></td>
+	<td>Photos</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="meta_types:list"
+	     tal:attributes="CHECKED python:test('MMS Messages' in mtypes)"
+	     value="MMS Messages"></td>
+	<td>MMS Messages</td>
+      </tr>
+    </table>
+    </td>    
+  </tr>
+  <tr>
+    <td><strong>Your name</strong>&nbsp;</td>
+    <td><input name="name" value="" 
+         tal:attributes="value here/getName"></td>
+  </tr>
+</table>
+
+<!-- /Less important details -->
+
+</td></tr>
+<tr>
+  <td colspan="3"><input type="submit" value="Save changes"></td>
+</tr>
+</table>
+
+</form>
+
+<br />
+<form action="discontinue">
+<input type="hidden" name="emailreminderid"
+ tal:attributes="value here/getId">
+<input type="submit" value="Remove Email Reminder">
+</form>
+
+
+   </div>
+</html>

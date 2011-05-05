@@ -1,0 +1,17 @@
+<dtml-call "RESPONSE.setHeader('Expires',_.DateTime(_.DateTime().timeTime()+_.int(10*60*60)).rfc822())"><dtml-call "RESPONSE.setHeader('Content-Type', 'text/css')">body{font-family:Arial, Verdana, sans-serif;}
+.q_highlight{font-weight:bold;color:black;}
+h3{font-family:Arial, Verdana, sans-serif;}
+h4{font-family:Arial, Verdana, sans-serif;}
+.bc{font-family:Arial, Verdana, sans-serif;font-size:90%;}
+.copyright{font-family: Arial, Verdana;font-size: 60%;color: #999999;}
+.smaller{font-size:80%;color: #666666;}
+.btitle{font-weight:bold;}
+a.burl{font-size:90%;}
+a.mi{font-family:Arial, Verdana, sans-serif;}
+.s_mi{font-family:Arial, Verdana, sans-serif;font-size:80%;color: #666666;}
+img.floatright{float: right;margin: 0 0 7px 7px;}
+img.floatleft{float: left;margin: 7px 7px 0 0;}
+pre{background-color: #EEEEEE;margin-left: 1px;padding: 2px 2px 2px 2px;border:1px dashed #CCCCCC;}
+div.comment{font-family:Arial, Verdana, sans-serif;width:90%;border-top:1px solid #cccccc;margin-bottom:10px;}
+span.commenttext{font-size:80%;font-family:Arial, Verdana, sans-serif;}
+.my_code_default{font-family: "Courier New", Courier, monospace;font-size: 10pt;background-color: #EEEEEE;margin-left: 1px;padding: 2px 2px 2px 2px;border:1px dashed #CCCCCC;}

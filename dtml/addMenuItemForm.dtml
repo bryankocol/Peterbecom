@@ -1,0 +1,35 @@
+<HTML> 
+<HEAD><TITLE>Add MenuItem</TITLE>
+<link rel="stylesheet" type="text/css" href="/manage_page_style.css">
+</HEAD> 
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555"> 
+<H2>Add MenuItem</H2> 
+<form action="manage_addMenuItem">
+<dtml-if GoToURL>
+ <input type=hidden name=GoToURL value="<dtml-var GoToURL>">
+</dtml-if>
+<table border=0> 
+<tr><th><em>Id:</em></th> 
+    <td><input type=text name=id value=""></td> 
+</tr>
+
+<tr><th>Title:</th>
+    <td><input type=text name=title size="40" value=""></td> 
+</tr>
+
+<tr><th colspan="2">Append to show_menuitems:
+	<input type="checkbox" name="add2show_menuitems:int"  value="1"></th>
+</tr>
+
+<tr><td colspan=2><b>Description</b><br>
+	<textarea name="description" cols="40" rows="3"></textarea>
+	</td>
+</tr>
+
+<tr><th>Image:</th>
+	<td><input name="image" type="file" size="40"></td>
+</tr>
+
+<tr><td></td><td><input type=submit value=" Add "></td></tr> 
+</table></form> 
+</body></html> 

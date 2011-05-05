@@ -1,0 +1,17 @@
+<HTML> 
+<HEAD><TITLE>Add ChangeLogItem</TITLE>
+<link rel="stylesheet" type="text/css" href="/manage_page_style.css">
+</HEAD> 
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555"> 
+
+
+<p><strong>ChangeLogItems are best created programmtically via the ChangeLog
+item if you have one.</strong></p>
+
+<p>The function to call is:</p>
+<pre>manage_createChangeLogItem(object, title=None, action=None,
+                                comment='', date=None)</pre>
+			
+<p>Alternative alias is <code>addchangelog()</code> with the same parameter.			
+</body>
+</html> 

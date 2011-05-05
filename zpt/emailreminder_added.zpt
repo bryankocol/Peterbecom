@@ -1,0 +1,21 @@
+<html metal:use-macro="here/getHeader">
+   <div metal:fill-slot="body">
+
+<p>Email Reminder
+successfully created for <strong tal:content="here/getEmail"></strong>
+<br>
+You will shortly receive a greeting message, and you will have to 
+confirm your Email Reminder by following the URL in that email.
+</p>
+
+<br><br>
+
+Return to 
+<a href=".">Email Reminders information page</a> or 
+<a tal:attributes="href python:here.getRoot().absolute_url()">homepage</a>.
+
+
+
+
+   </div>
+</html>

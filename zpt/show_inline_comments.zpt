@@ -1,0 +1,36 @@
+
+
+<div tal:define="comments python:here.getComments(inobject=here);
+                 replypath python:request.get('replypath','')"
+ tal:condition="comments"
+ tal:repeat="comment comments"
+ tal:attributes="id comment/id"
+ class="commentinline comment">
+
+<tal:block tal:define="commentpath comment/getCommentPath">
+<span class="sn"
+tal:content="structure comment/showNameAndEmail">Name and
+email</span> -
+<small tal:content="structure python:comment.showAddDate()"></small>
+&nbsp;<span style="font-size:70%"
+tal:condition="not:python:replypath==commentpath"
+>
+[<a rel="nofollow" class="reply"
+tal:attributes="href string:#reply${commentpath}">&#171;&#171; Reply to this</a>]</span>
+
+<br />
+
+
+<span class="commenttext"
+ tal:content="structure python:comment.showComment()"
+></span>
+
+
+<form tal:condition="python:replypath==commentpath"
+tal:replace="structure here/addblogitemcomment_form" />
+
+</tal:block>
+
+<br tal:replace="structure python:comment.show_inline_comments(here, request, manager_view=options.get('manager_view',0))" />
+
+</div>

@@ -1,0 +1,37 @@
+<html metal:use-macro="here/getHeader">
+   <div metal:fill-slot="body">
+
+<h3>Email Reminders</h3>
+
+<p>If you like this site but don't visit it often you can instead
+set up a <strong>Email Reminder</strong> to send you and email with a
+summary of all the new content that has been added.</p>
+
+<p>Don't worry, your email address <strong>will not be exploited</strong>
+in any bad way and spammers will never be able to read off your email address.</p>
+
+<p>Your Email Reminder <strong>must be confirmed</strong> so read the first
+email you get after you have created an 
+<strong>Email Reminder</strong>. <br />
+Email Reminders can also be changed or cancelled if you want to do so.</p>
+
+<br /><br />
+
+<table bgcolor="#efefef" align="center"
+ cellpadding="10"
+ style="border:1px solid #666666">
+  <tr>
+    <td align="center">
+      <a style="font-size:100%;font-weight:bold;" 
+         href="addEmailreminder">Proceed to set up an Email Reminder
+&gt;&gt;&gt;</a>
+    </td>
+  </tr>
+</table>
+    
+<p><strong>Note:</strong>
+If nothing new has been added since your last email, 
+<strong>a blank email will not be sent</strong>.</p>
+
+   </div>
+</html>

@@ -1,0 +1,99 @@
+<div class="commentpreview"
+ tal:condition="python:request.has_key('preview_comment')">
+
+<span metal:use-macro="here/comment_macros/macros/preview"></span>
+
+</div>
+
+
+
+<form action="addComment" method="post" id="addcommentform"
+tal:define="replyid python:request.get('replypath','bottom').split('/')[-1]"
+tal:attributes="action string:${request/URL1}#${replyid}"
+>
+<input type="hidden" name="replypath"
+tal:attributes="value python:request.get('replypath')"
+tal:condition="python:request.has_key('replypath')" />
+<table border="0">
+	<tr>
+		<td><textarea name="comment:text" cols="60" rows="7"
+		tal:content="python:request.get('comment','')"
+		></textarea>
+		</td>
+		<td valign="top">
+
+		<table>
+		    <tr>
+  		    	<td style="font-size:90%">Name:</td>
+			<td><input name="name" size="23"
+			tal:attributes="value python:request.get('name', '')" />
+			</td>
+		    </tr>
+		    <tr>
+		    	<td valign="top" style="font-size:90%">Email:</td>
+			<td valign="top"><input name="email" size="23"
+			tal:attributes="value python:request.get('email', '')" />
+			
+			<br />
+			<input type="hidden" name="asked_hide_email:boolean" value="1" />
+			<small><input type="checkbox" name="hide_email:boolean"
+			        value="1" checked="checked" />
+			        hide my email address.</small>
+			<p style="font-size:80%;color:#666">			
+			Your email address will be encoded to prevent email-extraction
+			spiders from reading it so you won't get spammed 
+			if you decide to show your email address.</p>
+			
+			</td>
+		    </tr>
+		</table>
+		</td>
+
+	</tr>
+
+        <tr>
+		<td align="center">
+		<input type="submit" name="preview_comment"
+		id="preview_comment_button"
+		style="font-weight:normal"
+		value=" Preview first " />
+
+		<input type="submit" name="addComment:method" id="add_comment_button"
+		tal:attributes="style python:test(request.has_key('preview_comment'), 'font-weight:bold','')"
+		value=" Add Comment " />
+		
+		
+		</td>
+		<td colspan="2">&nbsp;
+		<div id="captchas" style="display:none" tal:define="random_captcha here/captchas/getRandomImage">
+		  What number is this?
+		  <span tal:condition="request/captcha_id|nothing">
+		  <img tal:attributes="src python:here.captchas[request.get('captcha_id')].absolute_url_path()" 
+		       alt="What number is this?" />
+		  <input type="hidden" name="captcha_id" tal:attributes="value request/captcha_id" />
+		  </span>
+		  <span tal:condition="not:request/captcha_id|nothing">
+		  <img tal:attributes="src random_captcha/absolute_url_path"
+		       alt="What number is this?" />
+		  <input type="hidden" name="captcha_id" tal:attributes="value random_captcha/getId" />
+		  </span>
+		  <input name="captcha_number" size="4" maxlength="5" />
+		  <input type="submit" name="addComment:method" value="OK" />
+		</div>
+		<noscript>Javascript required to enter comments <!--containing links--></noscript>
+		</td>
+	</tr>
+</table>
+<small id="captchawarning" style="display:none">
+Due to an increase in comment spam I've had to make it mandatory to recognize the imagenumbers. If you're unable to post comments,
+please contact me as soon as possible.</small>
+</form>
+
+<tal:comment replace="nothing">
+<div class="addcommentadvert"
+ tal:condition="python:not here.isMobileVersion() and here.countComments()">
+<p class="top">Advertisement:</p>
+<tal:item define="advert here/ad_code/getRandomAdvert"
+          replace="structure advert" />
+</div>
+</tal:comment>

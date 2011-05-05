@@ -1,0 +1,37 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Management')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<dtml-var "ManagementTabs('Top Referer Domain')">
+
+<p class="form-title">Top Referer Domain</p>
+
+<dtml-unless "REQUEST.has_key('limit')">
+  <dtml-call "REQUEST.set('limit',10)">
+</dtml-unless>
+
+
+<form action="manage_TopRefererDomains">
+<input name="limit:int" value="<dtml-var "REQUEST.get('limit',10)">"
+size=2><input type="submit" value="Change limit">
+
+</form>
+
+<table border=0 cellpadding="0">
+  <dtml-in "getTopRefererDomains(limit=REQUEST.get('limit',2))">
+  <tr>
+    <td><dtml-var sequence-number></td>
+    <td style="font-size:80%;font-family:Arial,Verdana" width="100"><dtml-var domain></td>
+    <td><dtml-var count></td>
+  </tr>
+  </dtml-in>  
+</table>
+
+<br>&nbsp;
+<dtml-var manage_page_footer>

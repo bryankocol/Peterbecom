@@ -1,0 +1,38 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Management')">
+<dtml-var manage_tabs>
+</dtml-with>
+
+<dtml-var "ManagementTabs('Find Comment Spam')">
+
+<form action="manage_deleteCommentSpam" method="post">
+<dtml-in "objectValues('Peterbecom Blog Container')">
+  <dtml-in "objectValues('Peterbecom Blog Item')">
+    <dtml-let blogitemurl="absolute_url()" blogitemtitle="getTitle()">
+    
+    <dtml-in "getAllComments(_['sequence-item'], include_unapproved=True)">
+      
+      <dtml-let spaminfo="hateToSee('%s %s %s' % (getName(), getEmail(), getComment()))">
+      <dtml-if "spaminfo[0]">
+        <strong><dtml-var blogitemtitle></strong>
+        <dtml-unless isApproved>(Not approved)</dtml-unless>
+        <br />
+      
+        <input type="checkbox" name="paths" 
+          value="<dtml-var absolute_url_path>" checked="checked" />
+        <a href="<dtml-var blogitemurl>#<dtml-var getId>"
+           style="font-size:80%s"
+         ><dtml-var "getComment()[:30]" html_quote></a>
+         <code><dtml-var "spaminfo[1]" html_quote></code>
+        <br />
+      </dtml-if>    
+      </dtml-let>
+    </dtml-in>
+    </dtml-let>
+  </dtml-in>
+</dtml-in>
+<br /><input type="submit" value="Delete these comments" />
+</form>
+
+<br />&nbsp;
+<dtml-var manage_page_footer>

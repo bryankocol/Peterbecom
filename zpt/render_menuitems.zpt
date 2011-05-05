@@ -1,0 +1,10 @@
+<div class="m_item" tal:repeat="menuitem here/getMenuItems"
+tal:attributes="class python:test(here.menuItemHighlit(menuitem), 'm_item_on','m_item');
+                id string:${menuitem/getId}_menuimage">
+<a class="mi" 
+   tal:attributes="href python:here.slimURL(menuitem.getURL());title python:menuitem.showDescription(html_quote=1, dequote=1, strip_html=1)"
+    tal:content="python:menuitem.getTitle()">Some title</a><br/>
+<div tal:replace="structure python:menuitem.showDescription(html_quote=1)">
+    Some description and stuff</div>
+
+</div>

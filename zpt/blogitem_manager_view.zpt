@@ -1,0 +1,134 @@
+<span tal:define="global prev_next python:here.getPrevNext()" tal:omit-tag="" />
+<html metal:use-macro="here/getHeader">
+<span metal:fill-slot="extralink" tal:omit-tag="">
+<link rel="prev" tal:condition="python:prev_next.has_key('prev')"
+ tal:attributes="href prev_next/prev/href">
+<link rel="next" tal:condition="python:prev_next.has_key('next')"
+ tal:attributes="href prev_next/next/href">
+</span>
+<div metal:fill-slot="undermenu" class="smaller">
+
+<span tal:define="related python:here.getRelatedBlogItems()" tal:omit-tag="">
+
+
+
+<span tal:condition="python:prev_next.has_key('prev')">
+<b>Previous:</b><br/>
+<a tal:attributes="href python:prev_next['prev']['href']"
+   tal:content="python:prev_next['prev']['title']"></a><br/>
+</span>
+
+<span tal:condition="python:prev_next.has_key('next')">
+<b>Next:</b><br/>
+<a tal:attributes="href python:prev_next['next']['href']"
+   tal:content="python:prev_next['next']['title']"></a>
+</span>
+
+
+
+<h4 tal:condition="related">Related blogs</h4>
+
+<span tal:repeat="blogitem related" tal:omit-tag="">
+<a href="" tal:attributes="href python:here.slimURL(blogitem.alias_absolute_url());
+title python:blogitem.showPubDate()"
+tal:content="blogitem/getTitle"></a><br>
+</span>
+
+<br>
+
+<span tal:define="cats python:here.getItemCategories(show='both');
+url_quote_plus nocall:modules/Products/PythonScripts/standard/url_quote_plus"
+tal:omit-tag="">
+<h4 tal:condition="cats">Related by category</h4>
+
+<div tal:repeat="cat cats">
+<a  href="" tal:attributes="href
+python:here.getRootURL()+'/oc-%s'%url_quote_plus(cat['id'])"><img
+tal:replace="structure python:cat['image'].tag(hspace=4, border='0')" />
+<br tal:replace="cat/id" /></a>
+</div>			 
+
+</span>
+</span>
+
+</div>
+
+
+<div metal:fill-slot="body" tal:omit-tag="">
+
+
+  <span tal:replace="structure here/ShowBlogItemCategories">
+  </span>
+  
+<div tal:condition="request/requires-approval|nothing"
+     tal:content="request/msg|default"
+     style="border:1px solid red; padding:10px; text-align:center;">
+   Your newly added comment will require approval before being published
+</div>
+
+<h3 tal:content="here/getTitle">Title</h3>
+
+<a href="" tal:replace="structure python:here.showURL(maxlength=68, title=here.getTitle())">URL</a>
+
+<h4 tal:content="structure python:here.showPubDate(html=1)">Date</h4>
+
+<p class="text" tal:replace="structure here/showText">The text...</p>
+
+
+<br clear="left" />
+
+<h4>Comment</h4>
+
+<a name="comments"></a>
+<div tal:define="comments here/getComments" tal:condition="comments" 
+ tal:repeat="comment here/getComments"
+ class="comment">
+
+
+<a name="" tal:attributes="name comment/id"></a>
+<a name="" tal:attributes="name comment/getCommentPath"></a>
+<span style="font-weight:bold;font-size:80%"
+tal:content="structure comment/showNameAndEmail">Name and
+email</span> - 
+<small tal:content="structure python:comment.showAddDate()"></small>
+&nbsp;<span style="font-size:70%"
+tal:condition="not:python:request.get('replypath','')==comment.getCommentPath()"
+>[<a
+tal:define="cgi string:?replypath=${comment/getCommentPath}#${comment/getId}"
+href="" tal:attributes="href cgi">&#171;&#171; Reply to this</a>]</span>
+<br>
+
+<span class="commenttext"
+ tal:content="structure python:comment.showComment()" ></span>
+
+<form tal:condition="python:request.get('replypath','')==comment.getCommentPath()"
+tal:replace="structure here/addblogitemcomment_form" />
+
+<style type="text/css">
+div.commentinline {
+  font-family:Arial, Verdana, sans-serif;
+  border-top:1px solid #cccccc;
+  padding:3px 4px 4px 4px;
+  margin-top:10px;
+  margin-bottom:10px;
+  margin-left:15px; 
+}
+</style>
+
+<br tal:replace="structure python:comment.show_inline_comments(here, request)" />
+
+
+</div>
+
+<span tal:condition="not:python:request.has_key('replypath')"
+ tal:omit-tag="">
+<div class="comment">&nbsp;</div>
+<a name="bottom"></a>
+
+<div id="commentform">
+<form tal:replace="structure here/addblogitemcomment_form" />
+</div>
+
+</span>
+   </div>
+</html>

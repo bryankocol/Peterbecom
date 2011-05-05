@@ -1,0 +1,100 @@
+<html metal:use-macro="here/getHeader">
+<style type="text/css" metal:fill-slot="extracss" tal:condition="not:here/isMobileVersion">
+div.blogday {
+  width:700px;
+  border-bottom:1px solid #666;
+}
+div.blogsummary {
+  width:700px;
+}
+.blogsummaryadvert {
+  /*text-align:center;*/
+  padding:20px;
+  border-top:1px solid #666;
+}
+.blogsummaryadvert p.bottom {
+  text-align:right;
+  font-size:0.7em;
+  margin:0;
+  color:#666;
+}
+.blogsummaryadvert p.top {
+  text-align:left;
+  font-size:0.7em;
+  margin:0;
+  color:#666;
+}
+#hottopics { font-size:0.9em; }
+#hottopics div { margin-bottom:10px }
+#hottopics p { margin:1px;}
+#hottopics a { font-size:0.8em;}
+</style>
+<div metal:fill-slot="undermenu" class="smaller">
+<h4><a href="/rss.xml">RSS</a></h4>
+
+
+<div id="hottopics">
+<h4>Hot topics</h4>
+  <div tal:repeat="comment python:here.plog.getLatestComments(howmany=10)">
+
+    <p><em tal:content="string:by ${comment/getName}: "></em>
+     <br tal:replace="python:comment.getComment()[:75]+'...'" /></p>
+    <a tal:define="blogitem comment/getParent"
+       tal:attributes="href string:${blogitem/alias_absolute_url_path}#${comment/getId};
+                       title blogitem/getTitle"
+       tal:content="python:blogitem.getTitle()[:50]"></a>
+  </div>
+</div>
+
+<h4>Old entries</h4>
+<br tal:replace="structure here/SideBlogArchiveMonths" />
+
+
+</div>
+
+<div metal:fill-slot="body">
+
+
+<br tal:define="global previous_pub_date nothing" tal:replace="nothing" />
+
+
+<div style="backgroun-color:#efefef" tal:condition="python:request.get('onlycategories', request.get('oc',[]))">
+<p>You're viewing blogs from <strong tal:content="structure python:here.showListString(request.get('onlycategories', request.get('oc',[])))"></strong> only.
+<a tal:define="oc_url here/getOCURL" tal:attributes="href string:${oc_url}/rss.xml">RSS?</a>
+</p>
+<p><a tal:attributes="href here/getRootURL">View all different categories</a></p>
+</div>
+
+<div class="blogday" tal:repeat="blogitem options/blogitems">
+
+ <span tal:condition="python:previous_pub_date !=blogitem.getPubDate().strftime('%Y%m%d')" tal:omit-tag="">
+ <span tal:define="global previous_pub_date python:blogitem.getPubDate().strftime('%Y%m%d')"
+ tal:replace="nothing" />
+ <h4 tal:content="structure python:blogitem.showPubDate(html=1, showyear=0)"></h4></span>
+
+<div class="blogsummary" tal:content="structure blogitem/ShowSummaryBlogItem">
+</div>
+
+
+</div>
+
+<p>&nbsp;</p>
+
+<tal:block define="oc_url python:here.getOCURL()">
+<div tal:define="n options/batch/next" tal:condition="n" style="float:right">
+<a tal:attributes="href string:${oc_url}/rq-bs-${n/first}">Older entries</a>
+<a tal:attributes="href string:${oc_url}/rq-bs-${n/first}"><img tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrow.gif')" alt="Order entries" border="0" /></a>
+</div>
+
+<div tal:define="p options/batch/previous" tal:condition="p" style="float:left">
+<a tal:attributes="href string:${oc_url}/rq-bs-${p/first}"><img tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrowl.gif')" alt="Back" border="0" /></a>
+<a tal:attributes="href string:${oc_url}/rq-bs-${p/first}">Back</a>
+</div>
+</tal:block>
+
+<p>&nbsp;</p>
+
+
+
+</div>
+</html>

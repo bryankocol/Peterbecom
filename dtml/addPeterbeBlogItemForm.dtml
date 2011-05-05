@@ -1,0 +1,191 @@
+<html> 
+<head><title>Add BlogItem</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+</head> 
+<body>
+<h2>Add Blog Item</h2>
+
+<dtml-if "REQUEST.has_key('addPeterbeBlogItemForm')">
+
+<blockquote>
+<table width="450" style="border:1px solid #ccc"><tr><td>
+
+<table width="100%" border="0">
+<tr>
+  <td><h4><dtml-var "REQUEST.get('title','')"></h4></td>
+  <td align="right"><dtml-in "getCategories('dict')" mapping>
+  <dtml-if "id in REQUEST.get('itemcategories',[])"><dtml-var image></dtml-if>
+  </dtml-in></td>
+</tr>
+<tr>
+  <td><dtml-if "REQUEST.get('url','http://')!='http://'">
+      <small><a href="<dtml-var "REQUEST.get('url')">"><dtml-var "REQUEST.get('url')"></a></small>
+	  &nbsp;
+	  </dtml-if>
+	  </td>
+  <td align="right"><small>0 comments</small></td>
+</tr>
+
+<tr>
+  <td colspan=2>
+  <dtml-var "ShowDescription(REQUEST.get('text',''), REQUEST.get('display_format',getDefaultDisplayFormat()))"></td>
+</tr>
+</table>
+
+</td></tr></table>
+</blockquote>
+
+</dtml-if>
+<script type="text/javascript">
+var custom_id = false;
+function setCustomId() {
+  if (document.blogp['id'].value)
+    custom_id = true;
+  else custom_id = false;
+}
+function idify(s) {
+    var regex = new RegExp(' ','gi');
+    s = s.replace(regex, '-');
+    s = s.toLowerCase();
+    return s;
+}
+function idsuggest() {
+    if (!custom_id)
+      document.blogp['id'].value = idify(document.blogp['title'].value);
+}
+</script>
+<form action="<dtml-var URL1>" name="blogp" method="post">
+<dtml-if GoToURL>
+ <input type="hidden" name="GoToURL" value="<dtml-var GoToURL>">
+</dtml-if>
+<table border="0"> 
+<tr><th><em>Id:</em></th> 
+    <td><input type="text" name="id" size="40" value="<dtml-var "REQUEST.get('id','')">" onblur="setCustomId()" /></td>
+</tr>
+
+<tr><th>Title:</th>
+    <td><input type="text" name="title" size="40" value="<dtml-var "REQUEST.get('title','')">"
+     onkeydown="idsuggest()" onblur="idsuggest()"></td>
+</tr>
+<tr><th>Alias:</th>
+    <td><input type="text" name="alias" size="40" value="<dtml-var "REQUEST.get('alias','')">">
+    <input type="button" value="suggest"
+onclick="javascript:document.blogp['alias'].value=document.blogp['title'].value;">
+    </td> 
+</tr>
+<tr><td colspan="2">
+<textarea name="text" cols="80" rows="19"><dtml-var "REQUEST.get('text','')"></textarea>
+</td>
+</tr>
+
+<tr><th>Publish date:</th>
+    <td><input type="text" name="pub_date:date" size="40" value="<dtml-var "REQUEST.get('pub_date',ZopeTime()).strftime('%Y/%m/%d %H:%M')">">
+	<small>YYYY/MM/DD HH:MM</small></td> 
+</tr>
+
+<tr><th>URL:</th>
+    <td><input type="text" name="url" size="50" value="<dtml-var "REQUEST.get('url','http://')">"></td> 
+</tr>
+
+<tr><th>Bookmark:</th>
+    <td><input type="checkbox" name="bookmark"  value="1"
+         <dtml-if "REQUEST.get('bookmark')">checked="checked"</dtml-if>/></td> 
+</tr>
+
+<dtml-comment>
+<tr><th>Language:</th>
+    <td><input type="text" name="language" size="2" value="<dtml-var "REQUEST.get('language','en')">"></td> 
+</tr>
+</dtml-comment>
+
+<tr><th>Display format:</th>
+    <td>
+	<select name="display_format">
+	<option value=""
+	<dtml-if "REQUEST.get('display_format','structuredtext')==''">selected="selected"</dtml-if>
+	>---------</option>
+	<option value="structuredtext"
+	<dtml-if "REQUEST.get('display_format','structuredtext')=='structuredtext'">selected="selected"</dtml-if>
+	>Structured Text</option>
+	<option value="html"
+	<dtml-if "REQUEST.get('display_format','structuredtext')=='html'">selected="selected"</dtml-if>
+	>HTML</option>
+        <option value="plaintext"
+	<dtml-if "REQUEST.get('display_format','structuredtext')=='plaintext'">selected="selected"</dtml-if>
+	>Plain text (HTML OK)</option>        
+	<option value="texmix"
+	<dtml-if "REQUEST.get('display_format','structuredtext')=='texmix'">selected="selected"</dtml-if>
+	>TeXMiX</option>
+	</select>
+	</td> 
+</tr>
+
+<tr><th>Code syntax:</th>
+    <td>
+	<select name="codesyntax_display_format">
+	<option value=""
+	<dtml-if "REQUEST.get('codesyntax_display_format','')==''">selected="selected"</dtml-if>
+	>---------</option>
+	<option value="cpp"
+	<dtml-if "REQUEST.get('codesyntax_display_format','')=='cpp'">selected="selected"</dtml-if>
+	>C++</option>
+	<option value="python"
+	<dtml-if "REQUEST.get('codesyntax_display_format','')=='python'">selected="selected"</dtml-if>
+	>Python</option>
+	<option value="sql"
+	<dtml-if "REQUEST.get('codesyntax_display_format','')=='sql'">selected="selected"</dtml-if>
+	>SQL</option>
+	<option value="xml"
+	<dtml-if "REQUEST.get('codesyntax_display_format','')=='xml'">selected="selected"</dtml-if>
+	>XML/HTML</option>
+	<option value="css"
+	<dtml-if "REQUEST.get('codesyntax_display_format','')=='css'">selected="selected"</dtml-if>
+	>CSS</option>
+
+	</select>
+	</td> 
+</tr>
+
+
+<tr><th>Categories</th>
+	<td><select name="itemcategories:list" size="<dtml-var "_.min(9, _.len(getCategories(only='id')))">" multiple>
+	<dtml-in "getCategories(only='id')">
+	<option value="<dtml-var sequence-item>"
+	<dtml-if "_['sequence-item'] in REQUEST.get('itemcategories',[])">selected="selected"</dtml-if>
+	><dtml-var sequence-item></option>
+	</dtml-in>
+        </select>
+	</td>
+</tr>
+
+<dtml-comment>'author_options' is potentially a property set in the aq path</dtml-comment>
+<dtml-if author_options>
+<tr><th><b>Author</b></th>
+        <td>
+	<select name="author">
+ 	<dtml-let preval="REQUEST.get('author', REQUEST.cookies.get('__blogitem_author',''))">
+	<dtml-in author_options>
+	<option value="<dtml-var sequence-item>"
+	<dtml-if "_['sequence-item'] == preval">selected="selected"</dtml-if>
+	><dtml-var sequence-item></option>
+	</dtml-in>
+	</dtml-let>
+	</select>
+        </td>
+</tr>
+</dtml-if>
+
+
+<tr>
+  <td></td>
+  <td>
+    <input type="submit" name="manage_addBlogItem:method" value=" Add " />
+  </td>
+</tr>
+</table>
+
+</form>
+
+
+</body>
+</html>

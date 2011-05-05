@@ -1,0 +1,80 @@
+var sizes = ["small","medium","large",""];
+var current_size="<dtml-var "REQUEST.get('current_size','')">";
+
+function changePhotoSize(linkelement) {
+   return true; // functionality on hold
+   var tosize = linkelement.href.substring(linkelement.href.indexOf('=')+1);
+   
+   var photoparent = $('photolink');
+   var photoelement = photoparent.firstChild;
+   var oldsrc = photoelement.src;
+   if (oldsrc.indexOf('?')>-1) {
+      oldsrc = oldsrc.substring(0,oldsrc.indexOf('?'));
+   }
+   var newurl=oldsrc +"/tag";
+   
+   var d = tosize ? "id=photo&display="+tosize : "id=photo";
+   
+   var a=new sack(newurl);
+   a.method="POST";
+   a.encodeURIString=false;
+   a.runAJAX(d);
+   a.onLoading=function(){
+      $('loadingmessage').innerHTML="loading...";
+   };
+   a.onCompletion=function(){
+      photoparent.innerHTML=a.response;
+      current_size = tosize;
+      $('loadingmessage').innerHTML="";
+      showSizerLinks($('sizerlinks'));
+      var suba=new sack("cookieDisplaySize");
+      suba.encodeURIString=false;
+      a.runAJAX('size='+tosize+'&redirect_after:int=0');
+   };
+   
+   return true;
+   //if (a.failed) return true;
+   //return false;
+}
+
+function showSizerLinks(parentelement) {
+    para = document.createElement("p");
+    para.setAttribute("class", "sizer");
+    para.appendChild(document.createTextNode("I prefer "));
+    
+    for (var i=0;i<sizes.length; i++) {
+       var s=sizes[i];
+       var label = s ? s+ " sized" : "unchanged";
+       if (current_size==s) {
+          b=document.createElement("b");
+          b.appendChild(document.createTextNode(label));
+          para.appendChild(b);
+       } else {
+          a=document.createElement("a");
+          a.href="/photos/cookieDisplaySize?size="+s;
+          a.appendChild(document.createTextNode(label));
+          a.onclick=function() { return changePhotoSize(this); };
+          para.appendChild(a);
+          
+       }
+       if ((i+1)<sizes.length) {
+          para.appendChild(document.createTextNode(" | "));
+       }
+    }
+    para.appendChild(document.createTextNode(" photos"));
+    var prevps=parentelement.getElementsByTagName("p");
+    var prevpara;
+    for (var i=0;i<prevps.length; i++) {
+       if (prevps[i].className=='sizer')
+         prevpara = prevps[i];
+    }
+    if (prevpara)
+     parentelement.replaceChild(para, prevpara);
+    else
+      parentelement.appendChild(para);
+   
+   
+   return false;
+}
+
+addEvent(window, 'load', function() {showSizerLinks($('sizerlinks'));});

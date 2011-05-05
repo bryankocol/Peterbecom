@@ -1,0 +1,76 @@
+<br tal:replace="python:here.doCache(24)" /><html metal:use-macro="here/getHeader">
+<metal:block fill-slot="extralink"
+             tal:condition="python:request.get('display')">
+<link rel="canonical" href="" tal:attributes="href here/ActionURL"/>
+</metal:block>
+<style type="text/css" metal:fill-slot="extracss">
+.sizer {
+  font-size:80%;
+}
+</style>
+<div metal:fill-slot="body">
+
+<div tal:define="prev_next python:here.getPrevNext(with_display_param=1)" style="float:right">
+
+<span tal:condition="python:prev_next.has_key('next')">
+<a tal:attributes="href python:prev_next['next']['href']"><img
+   tal:replace="structure python:here.slimTag(path('here/arrow-left.gif'), alt=prev_next['next']['title'], border='0')"></a>
+</span>
+
+<a href="../"><img tal:replace="structure python:here.slimTag(path('here/arrow-up.gif'), border='0')"></a>
+
+<span tal:condition="python:prev_next.has_key('prev')">
+<a tal:attributes="href python:prev_next['prev']['href']"><img 
+   tal:replace="structure python:here.slimTag(path('here/arrow-right.gif'), alt=prev_next['prev']['title'], border='0')"/></a>
+</span>
+   
+
+      
+</div>
+
+
+<h2 tal:content="structure here/getTitle">Title</h2>
+
+<a tal:define="photo python:path('here')" tal:attributes="href python:photo.direct_ext_url(default=photo.absolute_url_path())"
+   id="photolink"
+><img tal:replace="structure python:here.tag(display=request.get('display', None))" /></a>
+<br />
+<p tal:define="nl2br nocall:modules/Products/PythonScripts/standard/newline_to_br"
+tal:content="structure python:here.ShowDescription(here.description,'structuredtext')">Description ...</p>
+
+<small>
+Uploaded: <br tal:replace="python:here.getPubDate().strftime('%Y/%m/%d')" />
+<br /></small>
+
+
+<tal:comment replace="nothing">
+<br tal:define="dummy here/logPhotoView" tal:replace="nothing" />
+</tal:comment>
+
+<tal:comment replace="nothing">
+<div id="sizerlinks" tal:define="current_size python:here.getPhotosDisplaySize('')">
+<p class="sizer">I prefer 
+<tal:block repeat="size python:['small','medium','large','']">
+  <a tal:condition="python:current_size != size and size != ''"
+     tal:attributes="href python:here.aq_parent.absolute_url()+('/display-%s/' % size) + here.getId() +'/view'"
+     tal:content="string:$size sized"></a>
+  <strong tal:condition="python:current_size == size and size != ''"
+     tal:content="string:$size sized"></strong>
+  <strong tal:condition="python:current_size == size and size == ''"
+     >unchanged sized</strong>
+  
+  <a tal:condition="python:current_size != size and size == ''"
+     tal:attributes="href python:here.absolute_url_path() +'/view'"
+     >unchanged sized</a>     
+     <tal:item condition="not:repeat/size/end">|</tal:item>
+     
+
+</tal:block>
+photos</p>
+</div>
+</tal:comment>
+
+<div id="loadingmessage"></div>
+
+</div>
+</html>

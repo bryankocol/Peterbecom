@@ -1,0 +1,72 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Keywords')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<p class="form-title">Keywords Management</p>
+
+<script type="text/javascript">
+function appendWord(word) {
+  var t = document.editform['keywords:lines'].value;
+  var nt = t+"\n"+word;
+  document.editform['keywords:lines'].value = nt;
+}
+</script>
+<form action="manage_editKeywords" method="post"
+ name="editform">
+
+<dtml-let keywords="getKeywords()">
+<textarea name="keywords:lines" cols="50" rows="12"><dtml-in
+keywords><dtml-var sequence-item><dtml-unless sequence-end>
+
+</dtml-unless></dtml-in></textarea>
+<dtml-if "not keywords and not REQUEST.has_key('do_find')">
+  <dtml-call "RESPONSE.redirect(URL+'?do_find=1')">
+</dtml-if>
+</dtml-let>
+
+<br>
+<input type="submit" value="Save Changes">
+
+</form>
+
+
+<p class="form-title">Find from text</p>
+
+
+<form action="<dtml-var URL1>/manage_Keywords" method="get">
+<input type="hidden" name="do_find" value="1">
+
+<dtml-if "REQUEST.has_key('do_find')">
+  <dtml-in "manage_getYahooExtractedTerms()">
+    <dtml-let word=sequence-item>
+    <acronym onClick="javascript:appendWord('<dtml-var "_.string.replace(word,'\'','\\\'')">');"><dtml-var word></acronym>,
+    </dtml-let>
+  </dtml-in>
+  <dtml-let threshold="_.float(REQUEST.get('threshold',99.2))">
+  <dtml-in "manage_getWOCSuggestions(threshold)" mapping>
+    <acronym onClick="javascript:appendWord('<dtml-var
+"_.string.replace(word,'\'','\\\'')">');" title="<dtml-var weight>"><dtml-var word></acronym>,
+  </dtml-in>
+  <br><input name="threshold:float" value="<dtml-var threshold>" size="2">%
+  <input type="submit" value="Change Threshold">
+  </dtml-let>
+<dtml-else>
+  
+  <input type="submit" value="1. Find unusual words">
+  
+</dtml-if>
+</form>
+
+<hr>
+
+<form action="manage_addTextToWOC" method="get">
+<input type="submit" value="2. Add this text to WOC">
+</form>
+
+<dtml-var manage_page_footer>

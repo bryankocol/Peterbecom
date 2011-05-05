@@ -1,0 +1,7 @@
+<wml metal:use-macro="here/WapLook/macros/standard">
+   <card metal:fill-slot="body">
+
+
+
+   </card>
+</wml>

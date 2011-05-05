@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html metal:define-macro="standard">
+<head tal:define="global main_title_or_id
+python:here.getRoot().title_or_id(); thistitle here/getTitle|nothing">
+
+<title tal:condition="python:not thistitle or thistitle==main_title_or_id"
+           tal:content="main_title_or_id">The title</title>
+    <title tal:condition="python:thistitle and thistitle!=main_title_or_id"
+           tal:content="string:${thistitle} - ${main_title_or_id}">The title</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" href="" type="text/css"
+   tal:attributes="href string:${here/getRootURL}/stylesheet.css"
+   href="/stylesheet.css">
+  <link rel="stylesheet" href="" type="text/css"
+   tal:attributes="href string:${here/getRootURL}/silvercity.css"
+   href="/silvercity.css">
+   
+  <script tal:replace="nothing" type="text/javascript" 
+  tal:attributes="src string:${here/getRootURL}/searchhi.js"
+src="searchhi.js"></script>
+
+<meta tal:replace="structure here/getMetaTagsHTML" />
+<meta tal:define="dummy here/storeReferer" tal:replace="nothing" />
+<meta name="robots" content="noindex">
+
+<script language="JavaScript" type="text/javascript">
+function econvert(s) {
+    s=s.replace(/%7E/g,'~');
+    s=s.replace(/%28/g,'(');
+    s=s.replace(/%29/g,')');
+    s=s.replace(/%20/g,' ');
+    s=s.replace(/_dot_| dot |_\._|\(\.\)/gi, '.');
+    s=s.replace(/_at_|~at~/gi, '@');
+    return s;
+}
+
+function AEHit() {
+    var spans = document.getElementsByTagName("span");
+    for (i=0; i< spans.length; i++) 
+        if (spans[i].className=="aeh") 
+            spans[i].innerHTML = econvert(spans[i].innerHTML);
+}  
+
+</script>
+
+</head>
+
+<body onLoad="AEHit()">
+<img src="/misc_/Peterbecom/peterbe_logo_white_small.gif" width="140"
+height="37" alt="Peterbe.com" /><br />
+<strong tal:content="here/ActionURL"></strong>
+<br />
+
+<hr>
+<div metal:define-slot="body">
+
+<!--METALbody-->
+
+</div>
+
+<p>&nbsp;</p>
+
+<br clear="left" /><br clear="right" />
+<hr>
+<div align="center" class="copyright">&copy; 
+Peter Bengtsson 2003 
+<a href="" tal:attributes="href here/ActionURL">Exit print view</a>
+
+
+
+
+</body>
+</html>
+
+        

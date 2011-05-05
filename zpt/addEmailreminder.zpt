@@ -1,0 +1,108 @@
+<html metal:use-macro="here/StandardLook/macros/standard">
+   <div metal:fill-slot="body">
+
+<h3>Create Email Reminder</h3>
+
+<p><a href=".">More information about Email Reminders</a></p>
+
+<form action="addEmailReminder_web" method="post">
+
+
+<table border=0>
+<tr><td valign="top">
+
+<em><strong>Important bits</strong></em>
+<br>&nbsp;
+<!-- Important details -->
+<table>
+  <tr>
+    <td><strong>Email</strong></td>
+    <td>
+<input name="email" value="" size="30"
+ tal:attributes="value python:request.get('email', request.get('__blogcomment_email',''))">    
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><strong>How often</strong>&nbsp;</td>
+    <td>every
+    <select name="dayskip:int">
+    <option value="1">day</option>
+    <option value="2">second day</option>
+    <option value="3">third day</option>
+    <option value="4">fourth day</option>
+    <option value="5" selected="selected">fifth day</option>
+    <option value="6">sixth day</option>
+    <option value="7">week</option>
+    
+    <option value="1" tal:repeat="i python:range(8, 14)"
+     tal:attributes="value i" tal:content="string:${i} days">every day</option>
+    <option value="14">two weeks</option>
+    <option value="1" tal:repeat="i python:range(15, 21)"
+     tal:attributes="value i" tal:content="string:${i} days">every day</option>
+    <option value="21">three weeks</option>
+    <option value="1" tal:repeat="i python:range(22, 30)"
+     tal:attributes="value i" tal:content="string:${i} days">every day</option>
+    <option value="30">month</option>
+    </select>
+    </td>
+  </tr>
+</table>
+
+
+<!-- /Important details -->
+
+</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td valign="top">
+
+<em><strong>Not so important bits</strong></em>
+<br>&nbsp;
+<!-- Less important details -->
+
+
+<table>
+  <tr>
+    <td><strong>Types</strong></td>
+    <td>
+    <table>
+      <tr>
+        <td><input type="checkbox" name="meta_types:list" CHECKED
+	     value="Peterbecom Blog Item"></td>
+	<td>Blog items</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="meta_types:list" CHECKED
+	     value="Peterbecom Photo"></td>
+	<td>Photos</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="meta_types:list" CHECKED
+	     value="MMS Messages"></td>
+	<td>MMS Messages</td>
+      </tr>
+    </table>
+    </td>    
+  </tr>
+  <tr>
+    <td><strong>Your name</strong>&nbsp;</td>
+    <td><input name="name" value="" 
+         tal:attributes="value python:request.get('name', request.get('__blogcomment_name',''))"></td>
+  </tr>
+</table>
+
+<!-- /Less important details -->
+
+</td></tr>
+<tr>
+  <td colspan="3"><input type="submit" value="Save and expect your first email greeting"></td>
+</tr>
+</table>
+
+</form>
+
+
+
+   </div>
+</html>

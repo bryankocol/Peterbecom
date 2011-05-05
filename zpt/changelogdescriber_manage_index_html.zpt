@@ -1,0 +1,58 @@
+<h1 tal:replace="structure here/manage_page_header">Header</h1>
+<tal:block define="manage_tabs_message
+options/manage_tabs_message|nothing; 
+                           management_view string:List"
+
+replace="structure here/manage_tabs" />
+
+<br />
+
+<style>
+th.ml {
+    color:white;
+    font-weight:bold
+}
+
+td.l {
+    font-family:Arial, Verdana, sans-serif;
+    font-size:90%;
+}
+</style>
+
+<form action=".">
+<table cellspacing=0 cellpadding=3>
+<tr bgcolor="#336AB4">
+  <th class="ml">&nbsp;</th>
+  <th class="ml">Email</th>
+  <th class="ml">Dayskip</th>  
+  <th class="ml">Meta types</th>
+  <th class="ml">IActions</th>
+  <th class="ml">Created Date</th>
+  <th class="ml">Send Date</th>
+  <th class="ml">Moderated</th>
+</tr>
+<tbody tal:repeat="er here/getEmailReminders">
+<tr tal:define="odd repeat/er/odd" 
+    tal:attributes="bgcolor python:test(odd,'#cccccc','#efefef')">
+  <td class="l"><input type="checkbox" name="ids:list" 
+       tal:attributes="value er/getId"></td>
+  <td class="l"><a tal:attributes="href string:mailto:${er/getEmail}"
+       tal:content="er/getEmail"></a>
+       <span tal:condition="er/getName">(<br tal:replace="er/getName" />)</span>
+       &nbsp;&nbsp;</td>
+  <td class="l" align="center"><span tal:replace="er/getDayskip"></span></td>
+  <td class="l"><span tal:replace="python:', '.join(er.getMetatypesTranslated())"></span></td>
+  <td class="l"><span tal:replace="python:', '.join(er.getInterestActions())"></span></td>  
+  <td class="l"><span tal:replace="python:er.getCreatedDate().strftime('%d %b %Y')"></span></td>
+  <td class="l"><span tal:replace="python:er.getSendDate().strftime('%d %b %Y')"></span></td>
+  <td class="l"><span tal:condition="er/isModerated" style="color:green">Yes</span>
+      <span tal:condition="not:er/isModerated" style="color:red">No</span></td>
+</tr>
+</tbody>
+</table>
+<input type="submit" name="manage_delObjects:method"
+value="Delete selected">
+
+</form>
+
+<h1 tal:replace="structure here/manage_page_footer">Footer</h1>

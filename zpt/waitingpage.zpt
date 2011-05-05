@@ -1,0 +1,40 @@
+<html>
+<head>
+<title tal:content="options/title|default">Waiting page</title>
+<meta http-equiv="refresh" 
+tal:define="defaultdelay python:0; delay options/delay|defaultdelay;url options/url"
+tal:attributes="content string:${delay};;url=${url}" />
+
+<style>
+body {
+  font-family:Verdana, Arial, sans-serif;
+}
+</style>
+</head>
+
+<body>
+
+<br /><br />
+
+<h1 align="center" tal:content="options/title|default">Waiting page</h1>
+
+<div align="center">
+<img src="/misc_/Peterbecom/waitinganimation.gif" width="82" height="10"
+border="0" />
+
+
+<table width="500" tal:condition="options/msg|nothing">
+<tr><td><br /><br />
+<p tal:content="structure options/msg"></p>
+</td></tr>
+</table>
+
+<br /><br /><br /><br />
+
+<p style="font-size:80%">
+Redirecting to <a tal:attributes="href options/url">this page</a>.
+</p>
+</div>
+
+</body>
+</html>

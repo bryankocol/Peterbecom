@@ -1,0 +1,48 @@
+var sizes = ["small","medium","large",""];
+var current_size="<dtml-var "getPhotosDisplaySize('')">";
+para = document.createElement("p");
+para.setAttribute("class", "sizer");
+para.appendChild(document.createTextNode("I prefer "));
+
+for (var i=0;i<sizes.length; i++) {
+   var s=sizes[i];
+   var label = s ? s+ "sized" : "unchanged";
+   if (current_size==s) {
+      b=document.createElement("b");
+      b.appendChild(document.createTextNode(label));
+      para.appendChild(b);
+   } else {
+      a=document.createElement("a");
+      a.href="/photos/cookieDisplaySize?size="+s;
+      a.appendChild(document.createTextNode(label));
+      para.appendChild(a);
+   }
+   if ((i+1)<sizes.length) {
+      para.appendChild(document.createTextNode(" | "));
+   }
+}
+para.appendChild(document.createTextNode(" photos"));
+
+<dtml-comment>
+<dtml-let s="getPhotosDisplaySize('')">
+document.writeln("<p><small> I prefer ");
+<dtml-if "s=='small'">
+document.writeln("<b>small sized</b> |");
+<dtml-else>
+document.writeln("<a href=\"/photos/cookieDisplaySize?size=small\">small sized</a> |");
+</dtml-if><dtml-if "s=='medium'">
+document.writeln("<b>medium sized</b> |");
+<dtml-else>
+document.writeln("<a href=\"/photos/cookieDisplaySize?size=medium\">medium sized</a> |");
+</dtml-if><dtml-if "s=='large'">
+document.writeln("<b>large sized</b> |");
+<dtml-else>
+document.writeln("<a href=\"/photos/cookieDisplaySize?size=large\">large sized</a> |");
+</dtml-if><dtml-if "s==''">
+document.writeln("<b>unchanged</b> |");
+<dtml-else>
+document.writeln("<a href=\"/photos/cookieDisplaySize?size=\">unchanged</a> ");
+</dtml-if>
+document.writeln("photos</small></p>");
+</dtml-let>
+</dtml-comment>  

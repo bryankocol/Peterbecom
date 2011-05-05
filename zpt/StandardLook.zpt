@@ -1,0 +1,256 @@
+<metal:block define-macro="standard">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head tal:define="global main_title_or_id
+python:here.getRoot().title_or_id(); thistitle here/getTitle|nothing">
+
+<title tal:content="here/getHTMLTitle"></title>
+
+<link rel="canonical"
+      tal:condition="request/print_view|nothing"
+      tal:attributes="href here/ActionURL" />
+
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+  <link rel="stylesheet" type="text/css" 
+   tal:attributes="href python:here.getMiscAlias('/misc_/Peterbecom/stylesheet.css,silvercity-optimized.css')" />
+   
+<tal:comment replace="nothing">
+  <link rel="stylesheet" type="text/css" media="screen"
+   tal:condition="not:request/print_view|nothing"
+   tal:attributes="href python:here.getMiscAlias('/misc_/Peterbecom/stylesheet.css,silvercity-optimized.css')" />
+  <link rel="stylesheet" type="text/css" media="print"
+   tal:attributes="media python:test(request.get('print_view'),'all','print');
+                   href python:here.getMiscAlias('/misc_/Peterbecom/print.css')" />
+</tal:comment>
+
+<link rel="start" href="/" title="Home"/>
+<link rel="alternate" type="application/rss+xml" title="RSS"
+      tal:define="oc_url here/getOCURL"
+      tal:attributes="href string:${oc_url}/rss.xml" />
+<span metal:define-slot="extralink" tal:omit-tag="">
+</span>
+<meta name="keywords" content=""
+ tal:define="emptylist python:[];
+             add_kws here/additional_meta_keywords|emptylist;
+	     added python:','.join(add_kws);
+	     added python:test(added, '%s,'%added,'')"
+ tal:attributes="content string:${added}Peter Bengtsson,peterbe.com,Peter,Bengtsson,Python, Django, Javascript, Books, Photos, London, Kung fu, kungfu, FWC, bugtracking, issuetracking, issue tracker, bug tracker"/>
+
+<meta name="description" content="Peter Bengtssons's personal homepage about
+little things that concern him." tal:attributes="content here/getMetaDescription|here/getTagline" />
+<meta name="copyright" content="Peter Bengtsson"/>
+<meta name="creator" content="Peter Bengtsson"/>
+<meta http-equiv="language" content="English"/>
+<meta name="generator" content="Zope" />
+
+<style metal:define-slot="extracss" tal:omit-tag="">
+</style>
+
+<tal:block condition="not:here/inDevelopmentMode">
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-94373-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+        'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+</tal:block>
+
+<style type="text/css">
+#donecalad {
+  position:absolute;
+  top:49px;
+  right:10px;
+  background-color:#efefef;
+  width:590px;
+  border:1px solid #993333;
+  padding:3px 6px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+#donecalad p { margin:0; }
+#donecalad p.first { margin:0; padding-top:5px; }
+#donecalad p.second { font-weight:bold; padding-bottom:5px;}
+#donecalad p.third { float:right; font-size:80%;}
+</style>
+
+<style type="text/css" tal:replace="nothing">
+/* From Christ */
+#donecalad {
+background-color:#EFEFEF;
+border:2px solid #993333;
+float:left;
+left:192px;
+padding:5px 15px;
+position:relative;
+top:20px;
+width:340px;
+}
+
+p.first img {
+float:left;
+padding-right:10px;
+}
+
+
+#donecalad p.first {
+font-size:14px;
+margin:0;
+padding-top:5px;
+}
+
+
+#donecalad p.third {
+float:right;
+font-size:75%;
+margin-top: 7px;
+}
+
+#donecalad p.second {
+font-weight:bold;
+margin-top:3px;
+padding-bottom:5px;
+}
+</style>
+
+</head>
+
+<body>
+<metal:block define-slot="bodyfirst"></metal:block>
+<div id="banner">
+
+<a tal:attributes="href string:${here/getRootURL}/"><img
+     id="logoface"
+     width="104" height="131" border="0"
+     tal:attributes="alt main_title_or_id;
+                     src python:here.getMiscAlias('/misc_/Peterbecom/home/grey_face.png')" /></a>
+
+<a tal:attributes="href string:${here/getRootURL}/"><img
+     id="logotext" width="229" height="61" border="0"
+     tal:attributes="alt main_title_or_id;
+                     src python:here.getMiscAlias('/misc_/Peterbecom/home/peterbe_logo_grey.gif')" /></a>
+
+<div id="topright">
+<div id="searchbox">
+<form tal:attributes="action python:here.slimURL(here.getRootURL()+'/search')">
+Search &nbsp;<input name="q" id="q"
+maxlength="40" size="16" tal:attributes="value
+python:request.get('q','')"/>&nbsp;<input type="submit" value="Go"/>
+</form>
+
+</div>
+</div>
+
+<div id="headextra" metal:define-slot="headextra" tal:omit-tag=""></div>
+<div id="breadcrumb">
+  <span tal:define="breadcrumbs here/getBreadcrumbs" tal:repeat="item breadcrumbs" class="bc">
+    <img tal:condition="python:1 or item != breadcrumbs[-1]" tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrow.gif')" width="9" height="11" alt="" />
+	<br tal:replace="structure item" />
+  </span>
+</div>
+
+<div id="donecalad">
+
+<p class="first"><a href="http://donecal.com/" title="A timesheet/time tracker for remembering what you've done"><img style="float:left; padding-right:5px;"
+tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/icon_57x57.png')" alt="DoneCal logo" border="0" /></a>
+Do you fill in time sheets at work?<br/>
+Or just want to know how long time you've spent on your projects?</p>
+<p class="third"><a href="/donecal">Read about it here</a></p>
+<p class="second"><a href="http://donecal.com/" title="A timesheet/time tracker for remembering what you've done">Check out DoneCal</a></p>
+</div>
+
+
+</div>
+
+<div id="main">
+<div id="leftcontent">
+
+<br tal:replace="structure here/render_menuitems" />
+	&nbsp;
+
+
+<div style="margin:0 2px 20px 4px" tal:replace="nothing">
+<p style="font-size:0.8em">
+Interested in buying ad space on this blog?<br/>
+You can, <a href="http://buysellads.com/buy/detail/35695" rel="nofollow">on BuySellAds.com</a>
+</p>
+</div>
+
+<div style="margin:0 4px 0 8px; background-color:#c80c0b"><!-- tal:replace="nothing" -->
+<p style="font-size:0.8em;color:white;padding:0 2px 5px 5px">
+<a href="http://kungfupeople.com/"><img
+tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/kfp_logo.png')" alt="KungFuPeople.com" border="0"/></a><br/>
+<strong>Do you train Kung Fu?</strong><br/>
+Or know someone who does?<br/>
+Then check out <a style="color:white" href="http://kungfupeople.com/">KungFuPeople.com</a>
+</p>
+</div>
+<br/>
+
+<a tal:attributes="href python:here.ActionURL().replace('http://www.peterbe.com','http://peterbe.mobi')"
+ style="font-size:80%" title="Mobile version of this page"><img tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/mobile.gif')" alt="Mobile version of this page" border="0" />
+Mobile version of this page</a><br /><br />
+
+<tal:comment replace="nothing">
+<div id="twitter_div" style="font-size:80%">
+<h3 class="twitter-title">Twitter Updates</h3>
+<ul id="twitter_update_list"></ul></div>
+<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/peterbe.json?callback=twitterCallback2&count=5"></script>
+</tal:comment>
+
+<div metal:define-slot="undermenu">
+</div>
+
+<br />&nbsp;
+</div>
+
+<div id="centercontent">
+<div metal:define-slot="body" tal:omit-tag="">
+<!--METALbody-->
+</div>
+
+</div>
+
+
+<div metal:define-slot="toprightpane" tal:omit-tag=""></div>
+
+</div>
+
+<br clear="all" />
+
+<div class="clearer">&nbsp;</div>
+
+<div id="footer">
+<div class="copyright">&copy;
+<a tal:replace="structure python:here.encodeEmailString('mail@peterbe.com','Peter Bengtsson')"></a> 2003-<br tal:replace="python:here.ZopeTime().strftime('%Y')" />
+<a title="Read more about this site itself"
+   tal:attributes="href python:here.About.absolute_url()"
+   tal:content="python:here.About.title_or_id()">About</a>,
+<a tal:attributes="href string:/rss.xml" title="RSS feed of this blog">RSS</a>,
+<a href="http://www.fry-it.com" title="Fry-IT - the company I work for and who hosts this site">Fry-IT Ltd</a>
+
+<a href="#" onclick="window.print();return false" title="Print this page"><img
+tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/printer.gif')" width="15" height="13" alt="Print view"
+hspace="3" vspace="0" border="0" /></a>
+
+</div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+
+<metal:block define-slot="extrajs"></metal:block>
+
+</body>
+</html>
+
+
+</metal:block>

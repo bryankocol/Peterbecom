@@ -1,0 +1,262 @@
+<html metal:use-macro="here/getHeader">
+<script metal:fill-slot="extrajs" type="text/javascript">
+function findSpellingAlternatives(){
+  var d='hide_ad=0';
+  if (hide) d='hide_ad=1';
+  var a=new sack(url);
+  a.AjaxFailedAlert=null;
+  a.encodeURIString=false;
+  a.runAJAX(d);
+  a.onCompletion = function() {document.getElementById('ad').innerHTML=a.response;};
+  if (a.failed) return true;
+  return false;
+}
+</script> 
+ 
+<div metal:fill-slot="body">
+
+<tal:block define="searchresults options/searchresults;photos 
+                   python:searchresults.get('Peterbecom Photo',[]);
+	 	   blogitems python:searchresults.get('Peterbecom Blog Item',[]);
+                   blogcomments python:searchresults.get('Peterbecom Blog Item Comment',[]);
+ 	 	   global url_quote_plus python:modules['Products'].PythonScripts.standard.url_quote_plus">
+ 
+
+
+<table align="center" bgcolor="#efefef" cellpadding="3" width="450" 
+ tal:condition="python:request.get('q','')">
+<tr><td align="center">
+<p><strong>You searched for <em
+tal:content="python:request.get('q','')"></em></strong><br />
+<span id="spellsuggout">&nbsp;</span>
+</p>
+
+<script type="text/javascript" tal:content="structure string:
+url = '${here/getRootURL}/getSpellingsuggestionLazy';
+var d = 'use_google=1&q='+ escape('${request/q}');
+var a = new sack(url);
+a.AjaxFailedAlert=null;
+a.encodeURIString=false;
+a.onCompletion = function() {
+  var res =a.response;
+  if (res) {
+    el = document.getElementById('spellsuggout');
+    m = 'Did you mean: ';
+    m += res;
+    el.innerHTML = m;
+  }
+};
+a.runAJAX(d);
+">
+</script>
+</td>
+</tr>
+
+<tr tal:condition="options/time_taken|nothing">
+<td align="right" class="smaller"><p>found <strong
+tal:content="python:len(photos)">X</strong> photos 
+and 
+<strong tal:content="python:len(blogitems)" >x</strong> blogs in
+and 
+<strong tal:content="python:len(blogcomments)" >x</strong> blog comments in
+<br tal:replace="python:'%.2f'%options.get('time_taken')" /> seconds</p></td>
+</tr>
+<tr tal:condition="options/stripped|nothing">
+<td align="right"><p class="smaller">The following words were ignored:
+<strong><span tal:repeat="stripword options/stripped"
+tal:replace="string:${stripword} ">x</span> </strong>
+</td>
+</tr>
+</table>
+
+<br>
+
+
+
+<table width="98%" 
+       tal:define="python_0 python:0;
+                   start request/pstart|python_0;
+                   photosbatch python:modules['ZTUtils'].Batch(photos, size=5, start=start);
+                   previous python:photosbatch.previous;
+                   next python:photosbatch.next"
+       tal:condition="python:photos or not blogitems">
+<tr bgcolor="#cccccc">
+<td colspan="2"><h4 style="padding:1px 10px;margin:5px 5px;">Photos</h4>
+<a name="photos"></a></td>
+</tr>
+<tr tal:repeat="photo photosbatch">
+<td align="center"><a 
+tal:attributes="href python:test(photo.aq_parent.meta_type=='Peterbecom Blog Item',photo.aq_parent.absolute_url_path(), photo.absolute_url_path()+'/view')"><img
+tal:replace="structure python:photo.tag(display='thumbnail', border='0')"/></a></td>
+<td><a tal:attributes="href
+python:test(photo.aq_parent.meta_type=='Peterbecom Blog Item',photo.aq_parent.absolute_url_path(), photo.absolute_url_path()+'/view')"
+><strong
+tal:content="structure python:here.HighlightQ(photo.title_or_id())"></strong></a><br />
+<div class="smallertext" tal:content="structure
+python:here.HighlightQ(photo.showDescription())"></div><br />
+
+
+
+<table tal:define="parts python:photo.getContainerParts(here.photos)"
+cellpadding="0"
+tal:condition="python:parts[-1].absolute_url().find(here.photos.absolute_url())>-1">
+<tr>
+<td><a tal:attributes="href here/photos/absolute_url"><img tal:define="img nocall:here/photos/polaroid.gif"
+tal:replace="structure python:img.tag(border='0', align='left')"></a></td>
+<td tal:repeat="part parts" class="smaller">/<a
+tal:condition="part/absolute_url|nothing"
+class="smaller"
+tal:attributes="href part/absolute_url|nothing"
+tal:content="part/title_or_id|nothing">X</a></td>
+</tr>
+</table>
+
+</td>
+</tr>
+<tr tal:condition="python:photos and (previous or next)">
+<td colspan="2" align="center" class="smaller"><br>Photos <br tal:replace="photosbatch/start" /> to 
+<br tal:replace="photosbatch/end" /> of <br tal:replace="python:len(photos)"
+/>. 
+
+<span tal:condition="previous"><a
+tal:define="q python:url_quote_plus(request.get('q'));url string:${request/URL0}?q=${q}&amp;pstart:int=${previous/first}#photos"
+tal:attributes="href url" href="previous_url">&lt; previous 
+<br tal:replace="previous/length" /></a></span>
+<span tal:condition="next"><a
+tal:define="q python:url_quote_plus(request.get('q'));url string:${request/URL0}?q=${q}&amp;pstart:int=${next/first}#photos"
+tal:attributes="href url" href="next_url">next 
+<br tal:replace="next/length" /> &gt;</a></span>
+
+</td>
+</tr>
+<tr tal:condition="not:photos">
+<td colspan="2"><em>No photos found</em>
+</tr>
+</table>
+
+<br />&nbsp;
+
+<table width="98%" border="0" 
+       tal:define="python_0 python:0;
+                   python_5 python:5;
+                   bstart request/bstart|python_0;
+                   bsize request/bsize|python_5;
+                   blogitemsbatch python:modules['ZTUtils'].Batch(blogitems, size=bsize, start=bstart);
+                   previous python:blogitemsbatch.previous;
+                   next python:blogitemsbatch.next"
+       tal:condition="python:blogitems or not photos">
+<tr bgcolor="#cccccc">
+<td colspan="2"><h4 style="padding:1px 10px;margin:5px 5px;">Blogs</h4>
+<a name="blogs"></a></td>
+</tr>
+<tr tal:repeat="blogitem blogitemsbatch">
+<td tal:define="cats python:blogitem.getItemCategories(show='both')">
+<tal:block tal:condition="cats"><a
+href="" tal:define="cat python:cats[0];
+url_quote_plus nocall:modules/Products/PythonScripts/standard/url_quote_plus"
+     tal:attributes="href python:here.getRootURL()+'/oc-%s'%url_quote_plus(cat['id'])"><br
+     tal:define="catimages python:blogitem.getItemCategories(show='image', limit=1)"
+tal:condition="catimages" tal:replace="structure
+python:catimages[0].tag(border='0')"/></a></tal:block>&nbsp;</td>
+<td><a href="" tal:attributes="href python:here.slimURL(blogitem.alias_absolute_url())"><strong
+tal:content="structure python:here.HighlightQ(blogitem.title_or_id())"></strong></a> - <span
+tal:content="structure python:blogitem.showPubDate(html=1)">date</span><br />
+<div class="smallertext" tal:content="structure
+python:here.HighlightQ(blogitem.showSearchResultExtract(request.get('extended_q', request.get('q',''))))"></div></td>
+</tr>
+
+<tr tal:condition="python:photos and (previous or next)">
+<td colspan="2" align="center" class="smaller"><br>Blogs <br
+tal:replace="blogitemsbatch/start" /> to 
+<br tal:replace="blogitemsbatch/end" /> of <br
+tal:replace="python:len(blogitems)"
+/>. 
+
+<span tal:condition="previous"><a
+tal:define="q python:url_quote_plus(request.get('q'));url string:${request/URL0}?q=${q}&amp;bstart:int=${previous/first}#photos"
+tal:attributes="href url" href="previous_url">&lt; previous 
+<br tal:replace="previous/length" /></a></span>
+<span tal:condition="next"><a
+tal:define="q python:url_quote_plus(request.get('q'));url string:${request/URL0}?q=${q}&amp;bstart:int=${next/first}#photos"
+tal:attributes="href url" href="next_url">next 
+<br tal:replace="next/length" /> &gt;</a></span>
+
+</td>
+</tr>
+
+<tr tal:condition="not:blogitems">
+<td colspan="2"><em>No blog items found</em>
+</tr>
+</table>
+
+
+
+
+<!-- comments -->
+
+<table width="98%" border="0" 
+       tal:define="python_0 python:0;
+                   python_5 python:5;
+                   cstart request/cstart|python_0;
+                   bsize request/bsize|python_5;
+                   blogcommentsbatch python:modules['ZTUtils'].Batch(blogcomments, size=bsize, start=cstart);
+                   previous python:blogcommentsbatch.previous;
+                   next python:blogcommentsbatch.next"
+       tal:condition="python:blogcomments">
+<tr bgcolor="#cccccc">
+<td colspan="2"><h4 style="padding:1px 10px;margin:5px 5px;">Blog comments</h4>
+<a name="comments"></a></td>
+</tr>
+<tal:block tal:repeat="blogcomment blogcommentsbatch">
+<tr tal:define="blogitem blogcomment/getParent">
+<td tal:define="cats python:blogitem.getItemCategories(show='both')">
+<tal:block tal:condition="cats"><a
+href="" tal:define="cat python:cats[0];
+url_quote_plus nocall:modules/Products/PythonScripts/standard/url_quote_plus"
+     tal:attributes="href python:here.getRootURL()+'/oc-%s'%url_quote_plus(cat['id'])"><br
+     tal:define="catimages python:blogcomment.getItemCategories(show='image', limit=1)"
+tal:condition="catimages" tal:replace="structure
+python:catimages[0].tag(border='0')"/></a></tal:block>&nbsp;</td>
+<td><strong>By <br tal:replace="structure blogcomment/showNameAndEmail" />
+</strong>
+- 
+<span tal:content="structure python:blogcomment.showAddDate(html=1)">date</span>
+on <br />
+
+<a tal:attributes="href python:here.slimURL(blogitem.alias_absolute_url())+'#%s'%blogcomment.getId()"
+   tal:content="structure python:here.HighlightQ(blogitem.title_or_id())"></a>
+<br />
+<div class="smallertext" tal:content="structure
+python:here.HighlightQ(blogcomment.showSearchResultExtract(request.get('extended_q', request.get('q',''))))"></div></td>
+</tr>
+</tal:block>
+
+<tr tal:condition="python:previous or next">
+<td colspan="2" align="center" class="smaller"><br />Blog comments <br
+tal:replace="blogcommentsbatch/start" /> to 
+<br tal:replace="blogcommentsbatch/end" /> of <br
+tal:replace="python:len(blogcomments)"
+/>. 
+
+<span tal:condition="previous"><a
+tal:define="q python:url_quote_plus(request.get('q'));url string:${request/URL0}?q=${q}&amp;cstart:int=${previous/first}#comments"
+tal:attributes="href url" href="previous_url">&lt; previous 
+<br tal:replace="previous/length" /></a></span>
+<span tal:condition="next"><a
+tal:define="q python:url_quote_plus(request.get('q'));url string:${request/URL0}?q=${q}&amp;cstart:int=${next/first}#comments"
+tal:attributes="href url" href="next_url">next 
+<br tal:replace="next/length" /> &gt;</a></span>
+
+</td>
+</tr>
+
+
+</table>
+
+
+</tal:block>
+
+
+   </div>
+   
+</html>

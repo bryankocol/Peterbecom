@@ -1,0 +1,10 @@
+<metal:block define-macro="preview">
+<span class="sn"
+tal:content="structure python:here.preview_showNameAndEmail()">Name and
+email</span> - 
+<small tal:content="structure python:here.preview_showAddDate()"></small>
+<br>
+
+<span class="commenttext"
+ tal:content="structure python:here.preview_showComment()" ></span>
+</metal:block>

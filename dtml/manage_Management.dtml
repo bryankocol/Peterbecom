@@ -1,0 +1,87 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Management')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<dtml-var "ManagementTabs('Main')">
+
+<p class="form-title">Homepage Mangement</p>
+
+<form action="<dtml-var getRootURL>/manage_recountBlogComments">
+<input type="submit" value="Recount blog comments" />
+</form>
+
+
+<form action="<dtml-var getRootURL>/UpdateCatalog">
+<input type="submit" value="Update Catalog" />
+</form>
+
+<form action="<dtml-var getRootURL>/manage_findCommentSpam">
+<input type="submit" value="Find Comment Spam">
+</form>
+
+<form action="<dtml-var getRootURL>/DeployStandards">
+<input type="submit" value="Deploy Standards">
+</form>
+
+<form action="<dtml-var getRootURL>/manage_updateAliasMap">
+<input type="submit" value="Update Alias Map">
+</form>
+
+<form action="<dtml-var getRootURL>/manage_runAllSQLCreateTableScripts">
+<table border=0>
+<tr>
+<td>
+<input type="submit" value="Run All SQL CreateTable Scripts">
+</td>
+<dtml-let methods="getAllCreateTableMethods()">
+<td>
+<select name="methodlist:list" multiple size="<dtml-var "_.len(methods)">">
+<dtml-in methods>
+<dtml-let method="_['sequence-item']['method']"
+          exists="_['sequence-item']['exists']">
+<option <dtml-unless exists>SELECTED</dtml-unless>
+ value="<dtml-var method>"
+ ><dtml-var method></option>
+</dtml-let>
+</dtml-in>
+</select>
+</td>
+</tr>
+</table>
+</dtml-let>
+</form>
+
+
+<form action="<dtml-var "getRoot().absolute_url()">/manage_getQuickURL">
+
+<dtml-if "REQUEST.get('quickurl','')">
+<pre style="background-color: #FFFFD0;padding: 2px 2px 2px 2px;border:1px dashed #CCCCCC;">
+<a style="text-decoration:underline; font-family:Courier New, Courier"
+href="<dtml-var "getRoot().absolute_url()">/<dtml-var "REQUEST.get('quickurl')">"
+><dtml-var "getRoot().absolute_url()">/<dtml-var "REQUEST.get('quickurl')"></a>
+</pre>
+</dtml-if>
+
+<input type="text" name="url" size="50"
+ value="<dtml-var "REQUEST.get('OrigURL','')">"
+ style="font-size:90%">
+<input type="submit" value="Get Quick URL">
+</form>
+
+<form action="<dtml-var "getRoot().absolute_url()">/TransferReferers2SQL">
+<input type="submit" value="Transfer Referers to DB">
+</form>
+
+<form action="manage_prepareAllTexMix">
+Recreate:<input type="checkbox" name="recreate:int" value="1" /><br />
+<input type="submit" value="Prepare all TexMixes">
+</form>
+
+<br>&nbsp;
+<dtml-var manage_page_footer>

@@ -1,0 +1,132 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Stats')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+<table width="99%">
+<tr><td valign="top">
+<p class="form-title">BlogItemView Statistics</p>
+</td><td>
+
+<dtml-let data="getStatisticsSummary(REQUEST.get('sincedate'))">
+<dtml-call "REQUEST.set('FirstDate', data['date1'])">
+<table border=1 cellpadding=3>
+  <tr>
+    <td><strong>Since</strong></td>
+    <td><strong>Running time</strong></td>
+    <td><strong>Total count</strong></td>
+    <td><strong>Per day</strong></td>
+  </tr>
+  <tr>
+    <td><dtml-var "data['date1'].strftime('%Y-%m-%d')"></td>
+    <td><dtml-var "data['differencestring']"></td>
+    <td><dtml-var "data['totalcount']"></td>
+    <td><dtml-var "_.round(data['perday'],1)"></td>    
+  </tr>
+</table>
+</dtml-let>
+
+</td></tr>
+</table>
+
+
+
+<dtml-if "REQUEST.has_key('show_big_table')">
+
+<a href="manage_Statistics">Show normal table</a><br />
+<dtml-let itemviews="getBlogItemViews()"
+          idtitlecombo="getIdTitleCombos()">
+<span style="font-family:Arial;font-size:90%">
+# <dtml-var "_.len(itemviews)"> blog item views in total
+</span>
+<table cellspacing=0 cellpadding=2>
+  <tr style="background-color:#cccccc;">
+    <th>Item</th>
+    <th>Referer</th>
+    <th>User agent</th>
+    <th>Date</th>
+  </tr>
+  <dtml-in itemviews>
+    <tr <dtml-if sequence-odd>bgcolor="#e6e6e6"</dtml-if>>
+    <dtml-if "idtitlecombo.has_key(blogitemid)">
+       <td style="font-size:80%"><a 
+        href="/plog/<dtml-var blogitemid>"><dtml-var "idtitlecombo[blogitemid].get('title','*No Title*')"></a></td>
+    <dtml-else>
+       <td style="font-size:80%"><a 
+        href="/plog/<dtml-var blogitemid>">*No Title*</a></td>
+    </dtml-if>
+    <td>&nbsp;
+      <dtml-if http_referer>
+        <a style="font-size:70%" 
+	 href="<dtml-var http_referer>"><dtml-var "showNiceReferer(http_referer)"></a>
+      <dtml-else>
+        &nbsp;
+      </dtml-if>
+    </td>
+    <td style="font-size:70%"><dtml-var "getUserAgentTranslation(user_agent)"></td>
+    <td><dtml-var visit_date></td>
+    </tr>
+    
+  </dtml-in>
+</table>
+</dtml-let>
+
+<dtml-else>
+
+
+<a href="manage_Statistics?show_big_table=1">Show big table</a><br />
+<form action="manage_Statistics" name="sinceform">
+Since:<input name="sincedate:date" size="10"
+value="<dtml-var "REQUEST.get('sincedate', REQUEST.get('FirstDate')).strftime('%Y/%m/%d')">">
+<input type="submit" value="Limit by date">
+<dtml-in "[['24 hours',1], ['3 days',3], ['1 week',7], ['2 weeks', 14],
+           ['1 month', 30], ['3 months', 30*3], ['6 months', 30*6]]">
+<input type="button" value="<dtml-var "_['sequence-item'][0]">"
+<dtml-let then="ZopeTime()-_['sequence-item'][1]"
+then="then.strftime('%Y/%m/%d')">
+onClick="javascript:document.sinceform['sincedate:date'].value='<dtml-var
+then>';document.sinceform.submit()">
+</dtml-let>
+</dtml-in>
+<br>
+Count limit: <input name="countlimit:int" value="<dtml-var
+"REQUEST.get('countlimit', 3)">" size="2">
+</form>
+<dtml-let itemviews="getBlogItemViewsGrouped(REQUEST.get('sincedate'))"
+ countlimit="REQUEST.get('countlimit', 3)"
+ idtitlecombo="getIdTitleCombos()">
+<table cellspacing=0 cellpadding=2>
+  <tr style="background-color:#cccccc;">
+    <th>Item</th>
+    <th>Title</th>
+    <th>Categories</th>
+    <th>Count</th>
+  </tr>
+  <dtml-in itemviews>
+    <dtml-if "count >= countlimit">
+    <tr <dtml-if sequence-odd>bgcolor="#e6e6e6"</dtml-if>>
+      <td style="font-size:80%"><a href="/plog/<dtml-var blogitemid>"><dtml-var blogitemid></a></td>
+      <dtml-if "idtitlecombo.has_key(blogitemid)">
+        <td><p>&nbsp; <dtml-var "idtitlecombo[blogitemid].get('title','*No Title*')"></td>
+        <td><p>&nbsp; <dtml-var "', '.join(idtitlecombo[blogitemid].get('categories',[]))"></td>
+      <dtml-else>
+        <td>&nbsp; *No Title*</td>
+        <td>&nbsp; None</td>
+    
+      </dtml-if>
+      <td align="center"><p><dtml-var count></td>
+    </tr>
+    </dtml-if>
+  </dtml-in>
+</table>
+</dtml-let>
+
+</dtml-if>
+<br>&nbsp;
+<dtml-var manage_page_footer>
+

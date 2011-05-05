@@ -1,0 +1,14 @@
+<html metal:use-macro="here/getHeader">
+   <div metal:fill-slot="body">
+
+<p>Email Reminders discontinued.</p>
+
+<br><br>
+
+Return to <a tal:attributes="href python:here.getRoot().absolute_url()">homepage</a>.
+
+
+
+
+   </div>
+</html>

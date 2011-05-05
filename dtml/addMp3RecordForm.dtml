@@ -1,0 +1,70 @@
+<HTML> 
+<HEAD><TITLE>Add Mp3Record</TITLE>
+<link rel="stylesheet" type="text/css" href="/manage_page_style.css">
+</HEAD> 
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555"> 
+<H2>Add Peterbecom Mp3Record</H2>
+
+
+<form action="<dtml-if
+"REQUEST.URL.endswith('createPrefilledMp3Record')"><dtml-var
+URL1>/manage_addProduct/Peterbecom/</dtml-if>manage_addPeterbeMp3Record">
+<dtml-if GoToURL>
+ <input type=hidden name=GoToURL value="<dtml-var GoToURL>">
+</dtml-if>
+<table border=0> 
+<tr><th>Id:</th> 
+    <td><input type=text name=id size="40" value="<dtml-var
+"REQUEST.get('id','mp3record-'+ZopeTime().strftime('%Y%m%d%H%M'))">"></td>
+</tr>
+
+<tr><th>Title:</th>
+    <td><input type=text name=title size="40" value="<dtml-var
+"REQUEST.get('title','')">"></td> 
+</tr>
+
+
+<tr><th>Artist:</th>
+    <td><input type=text name=artist size="40" 
+    value="<dtml-var "REQUEST.get('artist','')">"></td> 
+</tr>
+
+
+<tr><th>Album:</th>
+    <td><input type=text name=album size="40"
+    value="<dtml-var "REQUEST.get('album','')">"></td> 
+</tr>
+
+
+<tr><th>Track:</th>
+    <td><input type=text name=track size="40" 
+    value="<dtml-var "REQUEST.get('track','')">"></td>
+</tr>
+
+
+<tr><th>Year:</th>
+    <td><input type=text name=year size="40"
+    value="<dtml-var "REQUEST.get('year','')">"></td> 
+</tr>
+
+
+<tr><th>Genre:</th>
+    <td><input type=text name=genre size="40" 
+    value="<dtml-var "REQUEST.get('genre','')">"></td> 
+</tr>
+
+
+<tr><th>Comment:</th>
+    <td><textarea name="comment" cols="50" rows="10"><dtml-var
+"REQUEST.get('comment','')"></textarea></td>
+</tr>
+
+<tr><th>External<br>links:</th>
+    <td><textarea name="external_links:lines" cols="50" rows="10"><dtml-var
+"'\n'.join(REQUEST.get('external_links',[]))"></textarea></td>
+</tr>
+
+
+<tr><td></td><td><input type=submit value=" Add "></td></tr> 
+</table></form> 
+</body></html> 

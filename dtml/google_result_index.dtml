@@ -1,0 +1,149 @@
+<dtml-var manage_page_header> 
+<dtml-with "_(management_view='Results')">
+<dtml-var manage_tabs>
+</dtml-with>
+<dtml-if Principia-Version>
+<p> <em>You are currently working in version 
+  <dtml-var Principia-Version>
+  </em> </p>
+</dtml-if Principia-Version>
+
+
+<style style="text/css">
+tr.even { font-family:Verdana, Arial; font-size:90%; }
+tr.odd { font-family:Verdana, Arial; font-size:90%; background-color:#eee; }
+</style>
+
+
+<table border=1><tr><td valign="top">
+<form action="manage_addResult">
+<strong>Searchterm:</strong> <input name="searchterm" size="35">
+<br><input type="checkbox" name="checkduplication:int" value="1">
+check duplication
+<br><input type="submit" value="Add">
+</form>
+</td><td valign="top">
+
+<form action="check4SearchTerms">
+<strong>Total checks:</strong> 
+<input name="checks:int" value="150" size="3"><br>
+<input type="submit" value="Check All Latest">
+<div style="font-size:80%">Last check on <dtml-var
+getLatestAllCheckDate fmt="%Y-%m-%d %H:%M"></div>
+</form>
+</td>
+<td valign="top">
+<strong>Check count</strong><br />
+<code><dtml-var getTodaysCount></code>
+</td></tr>
+</table>
+
+<dtml-if "REQUEST.has_key('limit')">
+  <dtml-let then="ZopeTime()+50" then="then.rfc822()">
+    <dtml-call "RESPONSE.setCookie('google_r_idx_limit',
+REQUEST.get('limit'), path='/', expires=then)">
+  </dtml-let>
+<dtml-else>
+  <dtml-if "REQUEST.cookies.has_key('google_r_idx_limit')">
+    <dtml-call "REQUEST.set('limit',REQUEST.cookies.get('google_r_idx_limit'))">
+  <dtml-else>
+    <dtml-call "REQUEST.set('limit',20)">
+  </dtml-if>
+</dtml-if>
+
+<br>    
+<form action="manage_main">
+<input name="limit:int" value="<dtml-var "REQUEST.get('limit')">"
+size=2><input type="submit" value="Change limit">
+</form>
+    
+
+
+<dtml-if "REQUEST.get('HistoryView')">
+
+<dtml-var "GoogleManagementTabs('History View')">
+
+<dtml-var "HistoryViewTable()">
+
+<dtml-elif "REQUEST.get('MonthlyAverage')">
+
+<dtml-var "GoogleManagementTabs('Monthly average')">
+
+<dtml-let today="ZopeTime()">
+<dtml-in "_.range(10)">
+  
+  <dtml-let end="today-_['sequence-item']*30" start="today-_['sequence-item']*30-30">
+    
+    <dtml-in "SQLCalculateAverageIndexInPeriod(start_date=start, end_date=end)">
+      Between <code><dtml-var "Hourless(start)"></code> and <code><dtml-var "Hourless(end)"></code>:
+      <dtml-var average>
+      <small>of <code><dtml-var count></code> results</small>
+      <br>
+    </dtml-in>
+  </dtml-let>
+  
+</dtml-in>
+</dtml-let>
+
+
+<dtml-elif "REQUEST.get('TopIndexes')">
+
+
+<dtml-var "GoogleManagementTabs('Top Indexes')">
+
+<dtml-let data="getIndex1SearchTerms(limit=REQUEST.get('limit'),offset=REQUEST.get('offset',0))" 
+          count="data[0]" searchterms="data[1]">
+<p><b>#<dtml-var count></b> unique top searchterms</p>
+<table border=0 cellpadding=0>
+  <tr style="background-color:#ccc;">
+    <th>Searchterm</th>
+  </tr>
+  <dtml-in searchterms>
+  <tr class="<dtml-if sequence-odd>odd<dtml-else>even</dtml-if>">
+    <td><a href="http://www.google.com/search?q=<dtml-var searchterm url_quote_plus>"><dtml-var searchterm></a></td>
+
+  </tr>
+  </dtml-in>
+</table>
+
+</dtml-let>
+
+<dtml-else>
+
+<dtml-var "GoogleManagementTabs('Latest checks')">
+
+<style>
+.g { font-size:80%;font-family:Arial,Verdana; }
+.gb { font-weight:bold; }
+</style>
+<table border=0 cellpadding="0">
+  <dtml-in "getLatestResults(limit=REQUEST.get('limit'))">
+  <dtml-if sequence-start>
+  <thead>
+    <tr>
+      <td><a href="#" 
+       onclick="this.blur(); return sortTable('main', 0, false);"
+       >Term</a></td>
+      <td><a href="#" 
+       onclick="this.blur(); return sortTable('main', 1, false);"
+       >Index</a></td>
+    </tr>
+  </thead>
+  <tbody id="main">  
+  </dtml-if>
+
+  <tr>
+    <td class="g"><a <dtml-if "index==1">class="gb"</dtml-if>
+     href="http://www.google.com/search?q=<dtml-var searchterm url_quote_plus>"><dtml-var searchterm></a></td>
+    <td class="g"><dtml-var index></td>
+  </tr>
+  <dtml-if sequence-end>
+    </tbody>
+  </dtml-if>
+  </dtml-in>  
+</table>
+
+</dtml-if>
+
+<br>&nbsp;
+<dtml-var manage_page_footer>

@@ -1,0 +1,21 @@
+<html metal:use-macro="here/getHeader">
+
+<div metal:fill-slot="body">
+
+<h4 tal:content="here/getTitle">MMS Message</h4>
+
+<blockquote tal:replace="nothing"><p tal:content="here/getMessage">
+</p></blockquote>
+
+<img tal:replace="structure here/image/tag" />
+
+
+<br><br>
+by <strong tal:content="here/getSender">From</strong><br>
+
+<span tal:replace="structure python:here.getPubDate().strftime('%d %b %Y')"></span>
+
+
+</div>
+
+</html>

@@ -1,0 +1,13 @@
+<HTML> 
+<HEAD><TITLE>Add ChangeLog</TITLE>
+<link rel="stylesheet" type="text/css" href="/manage_page_style.css">
+</HEAD> 
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555"> 
+<H2>Add Peterbecom ChangeLog</H2> 
+<form action="manage_addChangeLog">
+<dtml-if GoToURL>
+ <input type=hidden name=GoToURL value="<dtml-var GoToURL>">
+</dtml-if>
+<input type="submit" value="Create ChangeLog object">
+</form> 
+</body></html> 

@@ -1,0 +1,14 @@
+
+
+<p>
+<img style="float:left" tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/404.gif')" alt="Page not found" />
+<strong>Oops! Page not found</strong><br/>
+You tried to access <code tal:content="structure request/URL"></code> but
+that page does not exist.
+</p>
+
+
+<p>
+Please return to <a href="/">the home page</a>.
+</p>
+

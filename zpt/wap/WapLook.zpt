@@ -1,0 +1,10 @@
+<?xml version="1.0"?><!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+<wml metal:define-macro="standard">
+<card title="Peterbe.com"><do type="prev"><prev/></do>
+
+<p metal:define-slot="body"></p>
+
+</card>
+
+</wml>

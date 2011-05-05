@@ -1,0 +1,231 @@
+<span tal:define="global prev_next python:here.getPrevNext()" tal:omit-tag="" /><html metal:use-macro="here/getHeader">
+
+<script metal:fill-slot="extrajs" type="text/javascript" tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/blogitem.js')"></script>
+
+<metal:block metal:fill-slot="extralink" tal:condition="not:here/isMobileVersion">
+
+<link rel="prev" tal:condition="python:prev_next.has_key('prev')"
+ tal:attributes="href prev_next/prev/href" />
+<link rel="next" tal:condition="python:prev_next.has_key('next')"
+ tal:attributes="href prev_next/next/href" />
+</metal:block>
+
+<div metal:fill-slot="undermenu" class="smaller">
+
+<span tal:define="related python:here.getRelatedBlogItems()" tal:omit-tag="">
+
+
+<span tal:condition="python:prev_next.has_key('prev')">
+<b>Previous:</b><br/>
+<a tal:attributes="href python:prev_next['prev']['href']"
+   tal:content="python:prev_next['prev']['title']"></a><br/>
+</span>
+
+<span tal:condition="python:prev_next.has_key('next')">
+<b>Next:</b><br/>
+<a tal:attributes="href python:prev_next['next']['href']"
+   tal:content="python:prev_next['next']['title']"></a>
+</span>
+
+
+
+<h4 tal:condition="related">Related blogs</h4>
+
+<span tal:repeat="blogitem related" tal:omit-tag="">
+<a href="" tal:attributes="href python:here.slimURL(blogitem.alias_absolute_url());
+title python:blogitem.showPubDate()"
+tal:content="blogitem/getTitle"></a><br>
+</span>
+
+<br />
+
+<span tal:define="cats python:here.getItemCategories(show='both');
+url_quote_plus nocall:modules/Products/PythonScripts/standard/url_quote_plus"
+tal:omit-tag="">
+<h4 tal:condition="cats">Related by category</h4>
+
+<div tal:repeat="cat cats">
+<a  href="" tal:attributes="href
+python:here.getRootURL()+'/oc-%s'%url_quote_plus(cat['id'])"><img
+tal:replace="structure python:cat['image'].tag(border='0')" />
+<br tal:replace="cat/id" /></a>
+</div>
+
+</span>
+</span>
+
+</div>
+
+<metal:block fill-slot="bodyfirst">
+
+<tal:comment replace="nothing">
+<!-- BuySellAds.com Ad Code -->
+<script type="text/javascript">
+(function(){
+  var bsa = document.createElement('script');
+     bsa.type = 'text/javascript';
+     bsa.async = true;
+     bsa.src = '//s3.buysellads.com/ac/bsa.js';
+  (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa);
+})();
+</script>
+<!-- END BuySellAds.com Ad Code -->
+</tal:comment>
+
+</metal:block>
+
+
+<div metal:fill-slot="body" tal:omit-tag="">
+
+  <span tal:replace="structure here/ShowBlogItemCategories">
+  </span>
+
+<div tal:condition="request/requires-approval|nothing"
+     tal:content="request/msg|default"
+     style="border:1px solid red; padding:10px;text-align:center">
+   Your newly added comment will require approval before being published
+</div>
+
+<h3 tal:content="here/getTitle">Title</h3>
+
+
+<a tal:replace="structure python:here.showURL(maxlength=68, title=here.getTitle())">URL</a>
+<br/>
+
+<tal:comment replace="nothing">
+<!-- BuySellAds.com Zone Code -->
+<div id="bsap_1251323" class="bsarocks bsap_4ed85ba7fa717a8452b869ba52fbf983"></div>
+<!-- END BuySellAds.com Zone Code -->
+</tal:comment>
+
+<tal:block condition="options/show_chango_ad|nothing">
+<div style="text-align:right;width:728px;">
+<script type="text/javascript" src="http://as.chango.com/links/ad.js?siteID=j4eAwCIUORrwWdVVVcWEJs0Bj&styleID=728x90&borderColor=CCCCCC&textColor=000000&linkColor=0000FF&backgroundColor=FFFFFF"></script>
+<!--<p style="margin: 0;font-size:10px;font-size:9px;color:#919191;"><a style="font-size:9px;color:#919191;" href="http://www.chango.com?utm_source=SearchSpots&utm_medium=Link&utm_campaign=SearchSpotsSR" target="_blank">Retargeting</a> by Chango</p>-->
+</div>
+</tal:block>
+
+<tal:block condition="options/show_chitika_ad|nothing">
+<script type="text/javascript">
+ch_client = "peterbe";
+ch_width = 728;
+ch_height = 90;
+ch_type = "mpu";
+ch_sid = "Chitika Default";
+ch_color_site_link = "#0000CC";
+ch_color_title = "#0000CC";
+ch_color_border = "#FFFFFF";
+ch_color_text = "#000000";
+ch_color_bg = "#FFFFFF";
+</script>
+<script src="http://scripts.chitika.net/eminimalls/amm.js" type="text/javascript">
+</script>
+</tal:block>
+
+
+<tal:comment replace="nothing">
+<div style="float:right" tal:content="structure here/amazon_ad_iframe_code">
+</div>
+</tal:comment>
+
+
+<h4 tal:content="structure python:here.showPubDate(html=1)">Date</h4>
+
+
+
+<p class="text" tal:replace="structure here/showText">The text...</p>
+
+<br />
+<tal:comment replace="nothing">
+<tal:block condition="not:here/isMobileVersion">
+<tal:block condition="python:request.get('HTTP_X_GEO') in ['US','CA','GB']">
+<iframe src="http://rcm.amazon.com/e/cm?t=crosstips-20&o=1&p=12&l=ur1&category=kindle&banner=1RR50DN6TK7D02JARP02&f=ifr" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+</tal:block>
+</tal:block>
+</tal:comment>
+
+
+<br />
+
+<tal:comment replace="nothing">
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-via="peterbe">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</tal:comment>
+
+
+<h4>Comment</h4>
+
+<a name="comments" tal:define="count here/countComments"
+ style="font-size:0.8em;color:#666"
+ tal:condition="python:count>20"
+ tal:content="string:$count comments so far"></a>
+
+
+<a href="?show-comments=1"
+   tal:condition="python:here.getComments() and here.isMobileVersion() and not request.get('show-comments')">Show all <br tal:replace="here/countComments" /> comments</a>
+
+<div
+ tal:define="comments here/getComments; replypath python:request.get('replypath','')"
+ tal:attributes="id comment/id"
+ tal:condition="python:comments and (not here.isMobileVersion() or (here.isMobileVersion() and request.get('show-comments')))"
+ tal:repeat="comment here/getComments"
+ class="comment">
+
+
+<tal:block define="commentpath comment/getCommentPath">
+<span class="sn"
+tal:content="structure comment/showNameAndEmail">Name and email</span> -
+<small tal:content="structure python:comment.showAddDate()"></small>
+&nbsp;<span style="font-size:70%"
+tal:condition="not:python:replypath==commentpath"
+>[<a rel="nofollow" class="reply"
+tal:attributes="href string:#reply${commentpath}">&#171;&#171; Reply to this</a>]</span>
+<br />
+
+<span class="commenttext"
+ tal:content="structure python:comment.showComment()" ></span>
+
+<form tal:condition="python:replypath==commentpath"
+tal:replace="structure here/addblogitemcomment_form" />
+</tal:block>
+
+
+<br tal:replace="structure python:comment.show_inline_comments(here, request)" />
+
+
+</div>
+
+
+
+
+<span tal:condition="not:python:request.has_key('replypath')"
+ tal:omit-tag="">
+<div class="comment">&nbsp;</div>
+<a name="bottom"></a>
+
+
+
+<tal:comment replace="nothing">
+<tal:block condition="not:here/isMobileVersion">
+<tal:block condition="python:request.get('HTTP_X_GEO') in ['US','CA']">
+<script type="text/javascript"><!--
+amazon_ad_tag = "crosstips-20"; amazon_ad_width = "728"; amazon_ad_height = "90"; amazon_ad_logo = "hide"; amazon_ad_link_target = "new"; amazon_ad_price = "retail"; amazon_ad_border = "hide";//--></script>
+<script type="text/javascript" src="http://www.assoc-amazon.com/s/ads.js"></script>
+</tal:block>
+</tal:block>
+</tal:comment>
+
+
+
+<div id="commentform" tal:condition="not:here/isMobileVersion">
+<form tal:replace="structure here/addblogitemcomment_form" />
+</div>
+<div id="commentform" tal:condition="here/isMobileVersion">
+<p><em>Commenting is currently disabled in Mobile version</em></p>
+</div>
+
+
+
+</span>
+
+   </div>
+</html>

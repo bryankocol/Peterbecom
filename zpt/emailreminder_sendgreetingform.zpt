@@ -1,0 +1,32 @@
+<h1 tal:replace="structure here/manage_page_header">Header</h1>
+<tal:block define="manage_tabs_message
+options/manage_tabs_message|nothing; 
+                          management_view string:Send Greeting"
+
+replace="structure here/manage_tabs" />
+
+<br />
+
+
+<span tal:condition="python:request.has_key('dosendgreeting')">
+<div tal:repeat="bit here/sendGreeting"
+tal:content="bit"></div>
+</span>
+
+
+<p tal:condition="here/isModerated">EmailReminder already
+moderated.</p>
+
+<p tal:condition="here/isGreetingSent"
+ style="font-weight:bold;">Greeting already sent!</p>
+
+<form action="" tal:attributes="action request/URL" 
+ tal:condition="not:here/isModerated">
+<br /><br />
+<div align="center">
+    <input type="submit" name="dosendgreeting" 
+    tal:attributes="value string:Send Greeting to ${here/getEmail}">
+</div>
+</form>
+
+<h1 tal:replace="structure here/manage_page_footer">Footer</h1>

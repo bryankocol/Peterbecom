@@ -1,0 +1,15 @@
+<span tal:replace="nothing"><br tal:replace="nothing"
+tal:define="dummy python:request.RESPONSE.setHeader('Expires',
+here.ZopeTime(here.ZopeTime().timeTime()+int(5*60*60)).rfc822())"
+/></span>
+<html metal:use-macro="here/getHeader">
+<div metal:fill-slot="body" tal:omit-tag="">
+
+<div tal:repeat="bag python:here.getBags()">
+<br tal:replace="structure bag/tag" /><br/>
+<br />
+</div>
+
+</div>
+</html>
+

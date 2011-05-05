@@ -1,0 +1,14 @@
+<HTML> 
+<HEAD><TITLE>Add ChangeLog Describer</TITLE>
+<link rel="stylesheet" type="text/css" href="/manage_page_style.css">
+</HEAD> 
+<BODY BGCOLOR="#FFFFFF" LINK="#000099" VLINK="#555555"> 
+<H2>Add Peterbecom ChangeLog Describer</H2>
+<form action="manage_addChangeLogDescriber">
+<input type="text" name="id" value="Describer">
+<dtml-if GoToURL>
+ <input type=hidden name=GoToURL value="<dtml-var GoToURL>">
+</dtml-if>
+<input type="submit" value="Create ChangeLog Describer object">
+</form> 
+</body></html> 

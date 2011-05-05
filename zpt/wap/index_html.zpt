@@ -1,0 +1,8 @@
+<wml metal:use-macro="here/WapLook/macros/standard">
+   <card>
+
+
+   <p metal:fill-slot="body">Peterbe.com</p>
+
+   </card>
+</wml>
