@@ -83,11 +83,17 @@ div.blogsummary {
 <tal:block define="oc_url python:here.getOCURL()">
 <div tal:define="n options/batch/next" tal:condition="n" style="float:right">
 <a tal:attributes="href string:${oc_url}/rq-bs-${n/first}">Older entries</a>
-<a tal:attributes="href string:${oc_url}/rq-bs-${n/first}"><img tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrow.gif')" alt="Order entries" border="0" /></a>
+<a tal:attributes="href string:${oc_url}/rq-bs-${n/first}"
+><img tal:condition="not:here/isMobileVersion"
+      tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrow.gif')" alt="Order entries" border="0" 
+ /><tal:item condition="here/isMobileVersion">&rarr;</tal:item></a>
 </div>
 
 <div tal:define="p options/batch/previous" tal:condition="p" style="float:left">
-<a tal:attributes="href string:${oc_url}/rq-bs-${p/first}"><img tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrowl.gif')" alt="Back" border="0" /></a>
+<a tal:attributes="href string:${oc_url}/rq-bs-${p/first}"
+><img tal:condition="not:here/isMobileVersion" 
+      tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrowl.gif')" alt="Back" border="0" 
+      /><tal:item condition="here/isMobileVersion">&larr;</tal:item></a>
 <a tal:attributes="href string:${oc_url}/rq-bs-${p/first}">Back</a>
 </div>
 </tal:block>

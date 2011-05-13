@@ -42,13 +42,6 @@ python:request.get('q','')">&nbsp;<input type="submit" value="Go">
 
 </div>
 
-<div id="breadcrumb" tal:replace="nothing">
-  <span tal:define="breadcrumbs here/getBreadcrumbs" tal:repeat="item breadcrumbs" class="bc">
-    <img tal:condition="python:1 or item != breadcrumbs[-1]" width="9" height="11" alt="&gt;"
-         tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/home/arrow.gif')"/>
-	<br tal:replace="structure item" />
-  </span>
-</div>
 
 
 
