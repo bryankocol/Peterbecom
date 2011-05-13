@@ -28,7 +28,7 @@
 
 <dtml-unless "isBookmark()">
 <div style="float:right">
-<a class="burl" href="<dtml-var "slimURL(alias_absolute_url())">#comments"><dtml-var "countComments()"> comments</a>
+<a class="burl" href="<dtml-var "slimURL(alias_absolute_url())"><dtml-if "isMobileVersion()">?show-comments=1</dtml-if>#comments"><dtml-var "countComments()"> comments</a>
 </div>
 </dtml-unless>
 
