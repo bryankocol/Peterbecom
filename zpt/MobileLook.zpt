@@ -1,5 +1,5 @@
-<metal:block define-macro="standard"><br tal:replace="python:request.RESPONSE.setHeader('Content-Type','application/xhtml+xml; charset=iso-8859-1')"
- /><?xml version="1.0" encoding="iso-8859-1"?>
+<metal:block define-macro="standard"><tal:comment replace="nothing"><br tal:replace="python:request.RESPONSE.setHeader('Content-Type','application/xhtml+xml; charset=iso-8859-1')"
+ /></tal:comment><?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN"
   "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
 
@@ -15,16 +15,6 @@ python:here.getRoot().title_or_id(); thistitle here/getTitle|nothing">
    
 <tal:extra metal:define-slot="extralink"></tal:extra>
 <meta name="copyright" content="Peter Bengtsson" />
-
-<script type="text/javascript" tal:condition="not:request/print_view|nothing">
-<!--
-init = function() {
-  AEHit();
-}
-window.onload=init;
-//-->
-</script>
-
 
 </head>
 
@@ -80,9 +70,8 @@ This is the Mobile version, you can <a href="http://www.peterbe.com/"
 <div class="copyright">&copy;
 <a href="" tal:replace="structure python:here.encodeEmailString('mail@peterbe.com','Peter Bengtsson')"></a> 2003-<br tal:replace="python:context.ZopeTime().strftime('%Y')" />
 <a href="" tal:attributes="href python:here.About.absolute_url_path()"
-tal:content="python:here.About.title_or_id()">About</a>,
-<a href="/rss.xml">RSS</a>,
-<a href="http://www.fry-it.com" title="Fry-IT is the company I work for">Fry-IT Ltd</a>
+tal:content="python:here.About.title_or_id()">About</a>
+<a href="http://www.fry-it.com">Site hosted by Fry-IT</a>
 
 
 </div>

@@ -10,21 +10,10 @@ python:here.getRoot().title_or_id(); thistitle here/getTitle|nothing">
       tal:condition="request/print_view|nothing"
       tal:attributes="href here/ActionURL" />
 
-
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-
   <link rel="stylesheet" type="text/css" 
    tal:attributes="href python:here.getMiscAlias('/misc_/Peterbecom/stylesheet.css,silvercity-optimized.css')" />
    
-<tal:comment replace="nothing">
-  <link rel="stylesheet" type="text/css" media="screen"
-   tal:condition="not:request/print_view|nothing"
-   tal:attributes="href python:here.getMiscAlias('/misc_/Peterbecom/stylesheet.css,silvercity-optimized.css')" />
-  <link rel="stylesheet" type="text/css" media="print"
-   tal:attributes="media python:test(request.get('print_view'),'all','print');
-                   href python:here.getMiscAlias('/misc_/Peterbecom/print.css')" />
-</tal:comment>
-
 <link rel="start" href="/" title="Home"/>
 <link rel="alternate" type="application/rss+xml" title="RSS"
       tal:define="oc_url here/getOCURL"
@@ -237,7 +226,7 @@ Mobile version of this page</a><br /><br />
    tal:attributes="href python:here.About.absolute_url()"
    tal:content="python:here.About.title_or_id()">About</a>,
 <a tal:attributes="href string:/rss.xml" title="RSS feed of this blog">RSS</a>,
-<a href="http://www.fry-it.com" title="Fry-IT - the company I work for and who hosts this site">Fry-IT Ltd</a>
+<a href="http://www.fry-it.com">Site hosted by Fry-IT</a>
 
 <a href="#" onclick="window.print();return false" title="Print this page"><img
 tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/printer.gif')" width="15" height="13" alt="Print view"
