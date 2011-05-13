@@ -11,7 +11,14 @@ python:here.getRoot().title_or_id(); thistitle here/getTitle|nothing">
 
 <title tal:content="python:here.getHTMLTitle(short=1)"></title>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
-<link rel="stylesheet" tal:attributes="href python:here.getMiscAlias('/misc_/Peterbecom/mobile.css')" type="text/css"/>
+<tal:comment replace="nothing"><link rel="stylesheet" tal:attributes="href python:here.getMiscAlias('/misc_/Peterbecom/mobile.css')" type="text/css"/></tal:comment>
+<style type="text/css">
+body{font-family:Arial,Verdana,sans-serif;margin:0;padding:0}
+#banner {background:#ccc; padding:2px 8px}
+#main {padding:4px 8px}
+.sn {font-weight:bold}
+div.comment {border-top:1px solid #ccc; margin-bottom:10px}
+</style>
    
 <tal:extra metal:define-slot="extralink"></tal:extra>
 <meta name="copyright" content="Peter Bengtsson" />
