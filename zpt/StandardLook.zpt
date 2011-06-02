@@ -67,13 +67,14 @@ little things that concern him." tal:attributes="content here/getMetaDescription
   border-radius: 5px;
 }
 #donecalad p { margin:0; }
+#donecalad p.zeroth { float:right; font-size:80%; color:#999; }
 #donecalad p.first { margin:0; padding-top:5px; }
 #donecalad p.second { font-weight:bold; padding-bottom:5px;}
 #donecalad p.third { float:right; font-size:80%;}
 </style>
 
 <style type="text/css" tal:replace="nothing">
-/* From Christ */
+/* From Chris */
 #donecalad {
 background-color:#EFEFEF;
 border:2px solid #993333;
@@ -148,7 +149,7 @@ python:request.get('q','')"/>&nbsp;<input type="submit" value="Go"/>
 </div>
 
 <div id="donecalad">
-
+<p class="zeroth">&larr; this is not a commercial ad</p>
 <p class="first"><a href="http://donecal.com/" title="A timesheet/time tracker for remembering what you've done"><img style="float:left; padding-right:5px;"
 tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/icon_57x57.png')" alt="DoneCal logo" border="0" /></a>
 Do you fill in time sheets at work?<br/>
