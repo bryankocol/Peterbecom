@@ -11,7 +11,7 @@ import BlogItem
 import BlogItemComment
 import OutandaboutContainer
 import OutandaboutItem
-import Mp3Records
+#import Mp3Records
 import WAP
 import MMS
 
@@ -165,16 +165,16 @@ def initialize(context):
         #    icon = "www/mp3record_icon.gif"
         #    )
 
-        context.registerClass(
-            Mp3Records.Mp3RecordContainer,
-            constructors = (
-                # This is called when
-                Mp3Records.manage_addMp3RecordContainerForm,
-                # someone adds the product
-                Mp3Records.manage_addMp3RecordContainer
-                ),
-            icon = "www/mp3record_icon.gif"
-            )
+#        context.registerClass(
+#            Mp3Records.Mp3RecordContainer,
+#            constructors = (
+#                # This is called when
+#                Mp3Records.manage_addMp3RecordContainerForm,
+#                # someone adds the product
+#                Mp3Records.manage_addMp3RecordContainer
+#                ),
+#            icon = "www/mp3record_icon.gif"
+#            )
 
         context.registerClass(
             MMS.MMSMessage,
