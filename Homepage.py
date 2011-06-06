@@ -100,6 +100,8 @@ class Empty:
 Nikon_filename_regex = re.compile('DSC_\d{3,5}\.JPG', re.I)
 #-----------------------------------------------------------------
 
+class NoSearchTerm(Exception):
+    pass
 
 def same_type(obj1, obj2):
     return type(obj1)==type(obj2)
@@ -1182,43 +1184,31 @@ class Homepage(PeterbecomBase, SQLCreateTables, SQLReferers,
 
     def SearchCatalog(self, q, meta_types=[]):
         """ Do a search """
-
-
-        #logfile = os.path.join(CLIENT_HOME, 'PeterbeSearchLog.csv')
-        #if not os.path.isfile(logfile):
-        #    f=open(logfile, 'w')
-        #    headers = ['Searchterm','Reducedterm','Datetime','Yield']
-        #    f.write(";".join(headers)+'\n')
-        #    f.close()
-
         q_orig = q
         if len(q.strip()) > 100:
-            raise "NoSearchTerm", "Search term too long (max 100 characters)"
-        if len(q.strip()) >= 2:
-            q = q.strip()
-            q, stripped = self._stripStopwords(q)
-            if stripped:
-                self.REQUEST.set('q_stripped', stripped)
-            transtab = string.maketrans('/ ','_ ')
-            q = string.translate(q, transtab, '?&!;()<=>*#[]{}')
+            raise NoSearchTerm("Search term too long (max 100 characters)")
+        if len(q.strip()) < 2:
+            raise NoSearchTerm("Search term too short")
 
+        q = q.strip()
+        q, stripped = self._stripStopwords(q)
+        if stripped:
+            self.REQUEST.set('q_stripped', stripped)
+        transtab = string.maketrans('/ ','_ ')
+        q = string.translate(q, transtab, '?&!;()<=>*#[]{}')
+
+        res, yieldcount, time_taken = self.getSearchResults(q, meta_types)
+        logging.info("Q: %r (took %s seconds to find %s items)" % (q, time_taken, yieldcount))
+
+        if yieldcount < 1 and len(q.split()) >= 2:
+            q = ' or '.join(q.split(' '))
+            q = q.replace(' or or ',' or ').replace(' or and ',' and ')
             res, yieldcount, time_taken = self.getSearchResults(q, meta_types)
+            logging.info("Q: %r (took %s seconds to find %s items)" % (q, time_taken, yieldcount))
 
-            if yieldcount < 5 and len(q.split(' ')) >= 2:
-                q = ' or '.join(q.split(' '))
-                q = q.replace(' or or ',' or ').replace(' or and ',' and ')
-                res, yieldcount, time_taken = self.getSearchResults(q, meta_types)
-
-            #flog = open(logfile, 'a')
-            #line = ';'.join([q_orig, q, str(DateTime()), str(yieldcount)])
-            #flog.write(line + '\n')
-            #flog.close()
-            tmpl_ = getattr(self, 'searchresults.zpt', self.searchresults)
-            return tmpl_(self, self.REQUEST, searchresults=res,
-                                      time_taken=time_taken, stripped=stripped)
-
-        else:
-            raise "NoSearchTerm", "Search term too short"
+        tmpl_ = getattr(self, 'searchresults.zpt', self.searchresults)
+        return tmpl_(self, self.REQUEST, searchresults=res,
+                                  time_taken=time_taken, stripped=stripped)
 
 
     def getSearchResults(self, q, meta_types=[], retry_on_error=True):
