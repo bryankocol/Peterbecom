@@ -1,25 +1,38 @@
-import google
+import re
+class H:
 
-GIVE_UP_LIMIT = 40
+    def _stripStopwords(self, qterm):
+        """ return improved search term and what words were removed """
+        #dumps = ('the','of','to','in','this','is','a','was')
+        # from http://www.textfixer.com/resources/common-english-words.txt
+        # which I got from wikipedia
+        dumps = "a able about across after all almost also am among an and "\
+                "any are as at be because been but by can cannot could dear "\
+                "did do does either else ever every for from get got had has "\
+                "have he her hers him his how however i if in into is it its "\
+                "just least let like likely may me might most must my "\
+                "neither no nor not of off often on only or other our own "\
+                "rather said say says she should since so some than that the "\
+                "their them then there these they this tis to too twas us "\
+                "wants was we were what when where which while who whom why "\
+                "will with would yet you your"
+        dumps = dumps.split()
+        stripped = []
+        qterm_splitted= qterm.split()
+        n_qterm = []
+        for term in qterm_splitted:
+            pure_term = re.sub('[^\w]', '', term.lower())
+            if pure_term in dumps:
+                stripped.append(term)
+            elif term.startswith('+') and term[1:].lower() in dumps:
+                n_qterm.append(term[1:])
+            else:
+                n_qterm.append(term)
+        n_qterm = iuniqify(n_qterm)
+        return ' '.join(n_qterm), stripped
 
-def calculateIndex(term, domain_name, start=0, checks=0):
-    d = google.doGoogleSearch(term, start=start)
-    msg = "term:%s (start:%s, checks:%s)"%(term, start, checks)
-#    LOG("calculateIndex()", INFO, msg)
-    checks += 1
-    c = 1
-    index = None
-    domain_name = domain_name.lower()
-    if not domain_name.startswith('http://'):
-        domain_name = 'http://%s'%domain_name
-    for each in d.results:
-        url = each.URL.lower()
-        if url.startswith(domain_name):
-            return c+start, checks
-        c += 1
-    if start < GIVE_UP_LIMIT:
-        return calculateIndex(term, domain_name, start+10, checks)
-    else:
-        return None, checks
-    
-print calculateIndex("Peterbe", "http://www.peterbe.com")
+
+h=H()
+print h._stripStopwords('All I do think about you, think about')
+print h._stripStopwords('ALL I DO THINK ABOUT YOU, THINK ABOUT')
+print h._stripStopwords('i and cant stop thinking about you')

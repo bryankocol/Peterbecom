@@ -31,7 +31,7 @@ except ImportError:
         from Products.stripogram import html2text, html2safehtml
     except ImportError:
         html2text = html2safehtml = None
-        
+
 try:
     import SilverCity
 except ImportError:
@@ -41,7 +41,7 @@ try:
     import SilvercityOptimizer
 except ImportError:
     SilvercityOptimizer = None
-    
+
 try:
     from addhrefs import addhrefs
 except ImportError:
@@ -49,13 +49,13 @@ except ImportError:
     def addhrefs(s, *a, **k):
         return s
 
-    
+
 def niceboolean(value):
     if type(value) is bool:
         return value
     falseness = ('','no','off','false','none','0', 'f')
     return str(value).lower().strip() not in falseness
-    
+
 
 from subprocess import Popen, PIPE
 def command(s):
@@ -82,7 +82,7 @@ def dehtmlify(html):
     html = starttag_regex.sub('',html)
     html = singletontag_regex.sub('', html)
     html = endtag_regex.sub('\n', html)
-    
+
     return html.strip()
 
 def _filterPasswordFields(items):
@@ -96,22 +96,22 @@ def _filterPasswordFields(items):
 hide_key={'HTTP_AUTHORIZATION':1,
           'HTTP_CGI_AUTHORIZATION': 1,
           }.has_key
-          
+
 def REQUEST2String(REQUEST):
     result="form\n"
     row = "\t%s: %s\n"
     for k,v in _filterPasswordFields(REQUEST.form.items()):
         result=result + row % (escape(k), escape(repr(v)))
-        
-        
+
+
     result += "cookies\n"
     for k,v in _filterPasswordFields(REQUEST.cookies.items()):
         result=result + row % (escape(k), escape(repr(v)))
-    
+
     result += "lazy items\n"
     for k,v in _filterPasswordFields(REQUEST._lazies.items()):
         result=result + row % (escape(k), escape(repr(v)))
-        
+
     result += "other\n"
     for k,v in _filterPasswordFields(REQUEST.other.items()):
         if k in ('PARENTS','RESPONSE'): continue
@@ -130,7 +130,7 @@ def REQUEST2String(REQUEST):
     for k,v in REQUEST.environ.items():
         if not hide_key(k):
             result=result + row % (escape(k), escape(repr(v)))
-            
+
     return result
 
 
@@ -156,13 +156,29 @@ def anyTrue(pred, seq):
     """ http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/212959 """
     return True in itertools.imap(pred,seq)
 
-def uniqify(somelist):
-    """ convert [1,2,3,1,2,6] into [1,2,3,6] """
-    newlist=[]
-    for each in somelist:
-        if each not in newlist:
-            newlist.append(each)
-    return newlist
+def uniqify(seq, idfun=None): # Alex Martelli ******* order preserving
+    if idfun is None:
+        def idfun(x): return x
+    seen = {}
+    result = []
+    for item in seq:
+        marker = idfun(item)
+        if seen.has_key(marker): continue
+        seen[marker] = 1
+        result.append(item)
+    return result
+
+def iuniqify(seq):
+    """ return a list of strings unique case insensitively.
+    If the input is ['foo','bar','Foo']
+    return ['foo','bar']
+    """
+    def idfunction(x):
+        if isinstance(x, basestring):
+            return x.lower()
+        else:
+            return x
+    return uniqify(seq, idfunction)
 
 def moveUpListelement(element, list):
     """ move an element in a _mutable_ list up one position
@@ -177,8 +193,8 @@ def moveUpListelement(element, list):
     elif element in list:
         i=list.index(element)
         list[i], list[i-1] = list[i-1], list[i]
-                                                                                    
-                                                                                    
+
+
 def getDomain(findlist):
     _all = '(com|co.uk|de|se|it|fr|com.br|fi|be|nl|com.au|co.in|es|'
     _all += 'com.ar|dk|pl|ca|ie|ch|cl|com.tr|ae|co.nz|as|at|com.my|'
@@ -190,11 +206,11 @@ def getDomain(findlist):
 
     _domains = '(yahoo|google|earthlink|msn|alltheweb|aol|comcast|'
     _domains += 'blueyonder|gogole|mysearch|mysearch.myway|imdb)'
-    
+
     _transl = {'gogole':'google', 'mysearch.myway':'mysearch',
                'imdb':'google'}
-               
-    
+
+
     f=list(findlist[0])
     while '' in f:
         f.remove('')
@@ -219,13 +235,13 @@ def generalQstr(s, bracketted=0):
     """ those that use 'q=' """
     if len(s.split('?')) > 1:
         s = s.split('?')[1]
-        
+
     parsed = cgi.parse_qs(s)
     if parsed.get('q'):
         s = parsed.get('q')[0]
     else:
         return ""
-        
+
     s = _translateQstr(s)
     if s and bracketted:
         s = '(%s)'%s
@@ -235,13 +251,13 @@ def queryQstr(s, bracketted=0):
     """ those that use 'query=' """
     if len(s.split('?')) > 1:
         s = s.split('?')[1]
-    
+
     parsed = cgi.parse_qs(s)
     if parsed.get('query'):
         s = parsed.get('query')[0]
     else:
         return ""
-        
+
     s = _translateQstr(s)
     if s and bracketted:
         s = '(%s)'%s
@@ -253,7 +269,7 @@ def googleQstr(s, bracketted=0):
 def yahooQstr(s, bracketted=0):
     if len(s.split('?')) > 1:
         s = s.split('?')[1]
-        
+
     parsed =  cgi.parse_qs(s)
     if parsed.get('p'):
         s = parsed.get('p')[0]
@@ -266,11 +282,11 @@ def yahooQstr(s, bracketted=0):
     if s and bracketted:
         s = '(%s)'%s
     return s
-    
+
 def earthlinkQstr(s, bracketted=0):
     return generalQstr(s, bracketted)
 
-    
+
 ## /Searchterms
 
 
@@ -287,7 +303,7 @@ def timeSince(firstdate, seconddate, afterword=None):
 
      If there is "no difference" between them, return false.
     """
-    
+
     # Language constants
     HOUR = 'hour'
     HOURS = 'hours'
@@ -322,7 +338,7 @@ def timeSince(firstdate, seconddate, afterword=None):
             else:
                 return "%s %s %s" % (hours, HOURS, afterword)
         else:
-            # if the difference is smaller than 1 hour, 
+            # if the difference is smaller than 1 hour,
             # return it false
             return 0
     else:
@@ -331,17 +347,17 @@ def timeSince(firstdate, seconddate, afterword=None):
             s.append('1 %s'%(YEAR))
         elif years > 1:
             s.append('%s %s'%(years,YEARS))
-        
+
         if months == 1:
             s.append('1 %s'%MONTH)
         elif months > 1:
             s.append('%s %s'%(months,MONTHS))
-        
+
         if days == 1:
             s.append('1 %s'%DAY)
         elif days > 1:
             s.append('%s %s'%(days,DAYS))
-        
+
         if len(s)>1:
             if afterword is None:
                 return "%s" % (string.join(s,' %s '%AND))
@@ -356,7 +372,7 @@ def timeSince(firstdate, seconddate, afterword=None):
 
 
 
-                     
+
 #def LineIndent(text, indent, maxwidth=None):
 #    """ indent each new line with 'indent' """
 #    text = indent+text
@@ -428,7 +444,7 @@ def getTexes(text, allinfo=0):
     if nr_tags_start != nr_tags_end:
         m = "%s start tags and %s end tags"%(nr_tags_start, nr_tags_end)
         raise "TagMismatch", m
-    
+
     if allinfo:
         return [x for x in texmix_reg.findall(text)]
     else:
@@ -443,7 +459,7 @@ CSS_SYNTAX = 5
 
 def SimpleSyntaxHighlight(text, syntax):
     """ just go straigt at it """
-    
+
     strconverters = {'python':PYTHON_SYNTAX, 'c++':CPP_SYNTAX,
                      'sql':SQL_SYNTAX, 'xml':XML_SYNTAX,
                      'css':CSS_SYNTAX}
@@ -461,8 +477,8 @@ def SimpleSyntaxHighlight(text, syntax):
     else:
         m = "Dont know what to do with %s"%syntax
         raise "UnrecognizedSyntax", m
-    
-    
+
+
     text = text.replace('&lt;','<').replace('&gt;','>')
     text = text.replace('&amp;','&').replace('&quot;','"')
     file = StringIO.StringIO()
@@ -472,25 +488,25 @@ def SimpleSyntaxHighlight(text, syntax):
     file.close()
     html = html.replace('\n','<br>')
     better = '<br><div class="my_code_default">%s</div>'%html
-        
+
     # remove the following line to not optimize the silvercity output
     if SilvercityOptimizer:
         better = SilvercityOptimizer.OptimizeSilverCityHTMLOutput(better, xhtml=True)
 
     return better
-    #text = text.replace('<pre>%s</pre>'%chunk, better)    
-    
-    
-    
+    #text = text.replace('<pre>%s</pre>'%chunk, better)
+
+
+
 def SyntaxHighlight(text, syntax):
     if not SilverCity:
         return text
-    
+
     pre_chunks = pre_reg.findall(text)
 
     if not pre_chunks:
         return text
-    
+
     if syntax == CPP_SYNTAX:
         g = SilverCity.CPP.CPPHTMLGenerator()
     elif syntax == PYTHON_SYNTAX:
@@ -515,13 +531,13 @@ def SyntaxHighlight(text, syntax):
         file.close()
         html = html.replace('\n','<br />')
         better = '<br /><div class="my_code_default">%s</div>'%html
-        
+
         # remove the following line to not optimize the silvercity output
         if SilvercityOptimizer:
             better = SilvercityOptimizer.OptimizeSilverCityHTMLOutput(better, xhtml=True)
-        
+
         text = text.replace('<pre>%s</pre>'%chunk, better)
-        
+
     del g
     return text
 
@@ -537,7 +553,7 @@ def nice_structured_text(st):
     for each in found_ununderlined:
         randstr = getRandomString(5)
         _href_mem[randstr] = each[0]
-        
+
     for each in found_ununderlined:
         each = list(each)
         basiceach = [each[0],'n'] + list(each[1:-1])
@@ -545,15 +561,15 @@ def nice_structured_text(st):
             if title == each[0]:
                 each[0] = '"%s"'%mem
         st = st.replace(''.join(basiceach), ''.join(each))
-        
+
 
     st = structured_text(st)
-        
+
     for each in found_ununderlined:
         e2 = each[2]
         if e2[-1] in ['.',',']:
             e2 = e2[:-1]
-        e0 = each[0] # title 
+        e0 = each[0] # title
         for mem, title in _href_mem.items():
             if title == each[0]:
                 e0 = mem
@@ -562,7 +578,7 @@ def nice_structured_text(st):
                 new_href = '<a href="%s" style="text-decoration:none">%s</a>'
                 new_href = new_href%(e2, _good)
                 st = st.replace(orig_href, new_href)
-                
+
     return st
 
 
@@ -576,13 +592,13 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
     """
     Display text, using harmless HTML
     """
-    
+
     text = SplitRegEx.sub('<!--split-->', text)
-    
+
     codesyntax = ''
     if same_type(display_format, ()) or same_type(display_format, []):
         display_format, codesyntax = display_format
-        
+
     if display_format == 'structuredtext':
         #st=_replace_special_chars(text)
         st=text
@@ -590,24 +606,24 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
         for k,v in {#'<':'&lt;', '>':'&gt;',
                     '[':'|[|'}.items():
             st = st.replace(k,v)
-        
+
 
         try:
             # my structured text
             st = nice_structured_text(st)
         except:
             st = structured_text(st)
-            
+
 
         for k,v in {'&amp;lt;':'&lt;', '&amp;gt;':'&gt;',
                     '|[|':'['}.items():
             st = st.replace(k,v)
-            
+
         # BUG in structured_text in Zope 2.4.0
         # it appends these annoying tags.
         for tag in ['<html>','<body>','</body>','</html>']:
             st = st.replace(tag, '')
-        
+
         pre_whole_tags = re.compile(r'<pre>.*?</pre>', re.I|re.DOTALL)
         pre_tags = pre_whole_tags.findall(st)
         mem = {}
@@ -615,18 +631,18 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
             randstr = '__%s__'%getRandomString()
             mem[randstr] = pre_tag
             st = st.replace(pre_tag, randstr)
-            
-        
+
+
         ### NEEDS TO BE FIXED!
         #st = addhrefs(st, urllinkfunction=mylinker)
-        
-        
+
+
         for key, tag in mem.items():
             st = st.replace(key, tag)
-        
+
         # preserve look of '<!--split-->'
         st = st.replace('<p><!--split--></p>','<!--split-->')
-        
+
         # syntax highlighting of code
         if str(codesyntax).lower() in ['c++','cpp']:
             st = SyntaxHighlight(st, CPP_SYNTAX)
@@ -638,7 +654,7 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
             st = SyntaxHighlight(st, XML_SYNTAX)
         elif str(codesyntax).lower() in ['css','stylesheet']:
             st = SyntaxHighlight(st, CSS_SYNTAX)
-            
+
         st = sole_ampersand_regex.sub('&amp;', st)
 
         return st
@@ -646,8 +662,8 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
         return text
     elif display_format == 'texmix':
         texes = getTexes(text, 1)
-        
-        
+
+
         count = 1
         for tagused, texstring in texes:
             imageid = 'texjpeg-%s.jpg'%count
@@ -660,7 +676,7 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
             imagetag += ' />'
             text = text.replace(texstring, imagetag)
             count += 1
-            
+
         text = text.replace('<texmix>','<span class="texmix">')
         text = text.replace('<texmix inline="1">','<span class="texmix-inline">')
         text = text.replace('</texmix>','</span>')
@@ -684,7 +700,7 @@ def ShowDescription(text, display_format='', nofollow_rel=False):
         t = newline_to_br(t)
         return t
 
-    
+
 def _ShouldBeNone(result): return result is not None
 def _ShouldNotBeNone(result): return result is None
 
@@ -736,7 +752,7 @@ def list_makesure(item):
     else:
         return item
 
-    
+
 def getRandomString(length=10, loweronly=1, numbersonly=0,
                     lettersonly=0):
     """ return a very random string """
@@ -769,8 +785,8 @@ def encodeEmailString(email, title=None, nolink=0):
 
     methods = ['_dot_',
                '&#%s;dot_' % ord(' '),
-               '_dot&#%s;' % ord(' '),               
-               '_._', 
+               '_dot&#%s;' % ord(' '),
+               '_._',
                '-.-']
     shuffle(methods)
 
@@ -785,7 +801,7 @@ def encodeEmailString(email, title=None, nolink=0):
 
     atsigns = ['at','AT', '&#%s;' % ord('@')]
     shuffle(atsigns)
-    
+
     # replace @ with *AT*
     email = email.replace('@','%s%s%s'%(methods[0], atsigns[0], methods[0]))
 
@@ -801,12 +817,12 @@ def encodeEmailString(email, title=None, nolink=0):
     else:
         return spantag_link%(email, title)
 
-    
+
 def encodeEmailString_OLD(email, title=None):
     """ if encode_emaildisplay then use JavaScript to encode it """
     if title is None:
         title = email
-        
+
     basic = email.replace('@','(at)').replace('.',' dot ')
     if title != email:
         basic = "%s, %s"%(title, basic)
@@ -819,17 +835,17 @@ def encodeEmailString_OLD(email, title=None):
     js_script += "<noscript>%s</noscript>"%basic
     return js_script
 
-    
-        
+
+
 def _hex_string(oldstring):
     """ hexify a string """
     # Taken from http://www.happysnax.com.au/testemail.php
     # See Credits
-    
+
     def _tohex(n):
         hs='0123456789ABCDEF'
         return hs[int(floor(n/16))]+hs[n%16]
-    
+
     newstring=''
     length=len(oldstring)
     for i in range(length):
@@ -842,31 +858,28 @@ def emailtesting():
         print s, "->", ValidEmailAddress(s)
     T("mail@peterbe.com")
     T("mail @peterbe.com")
-    
+
 def addhrefstesting():
 
     x='''http://www.frosp.com/pin555.gif
-    
+
 Boo Yah....555 ft'''
     print addhrefs(x)
-    
+
 def querystringtesting():
     q="va=peter+bengtsson&sourceid=mozilla-search&start=0&start=0&ie=utf-8&oe=utf-8"
     print yahooQstr(q)
 
 def runtests():
     """ just some misc testing """
-    
+
     #print getRandomString(2, lettersonly=1)
     #emailtesting()
     #addhrefstesting()
     querystringtesting()
-    
-    
-    
-    
+
+
+
+
 if __name__=='__main__':
     runtests()
-
-    
-    
