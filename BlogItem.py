@@ -1195,6 +1195,8 @@ class PeterbeBlogItem(PeterbecomBase, SQLBlogItemViews):
             url = self.absolute_url()+'#%s'%obj.getId()
             M  = "Name: %s\n"%name
             M += "Email: %s\n"%email
+            M += "IP Address: %s\n" % toobj.ip_address
+            M += "User Agent: %s\n" % toobj.user_agent
             M += "Comment:\n"
             M += Utils.LineIndent(comment,' '*3) + '\n\n'
 
