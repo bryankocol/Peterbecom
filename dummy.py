@@ -1,4 +1,29 @@
 import re
+def uniqify(seq, idfun=None): # Alex Martelli ******* order preserving
+    if idfun is None:
+        def idfun(x): return x
+    seen = {}
+    result = []
+    for item in seq:
+        marker = idfun(item)
+        if seen.has_key(marker): continue
+        seen[marker] = 1
+        result.append(item)
+    return result
+
+def iuniqify(seq):
+    """ return a list of strings unique case insensitively.
+    If the input is ['foo','bar','Foo']
+    return ['foo','bar']
+    """
+    def idfunction(x):
+        if isinstance(x, basestring):
+            return x.lower()
+        else:
+            return x
+    return uniqify(seq, idfunction)
+
+
 class H:
 
     def _stripStopwords(self, qterm):

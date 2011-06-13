@@ -1074,7 +1074,11 @@ class PeterbeBlogItem(PeterbecomBase, SQLBlogItemViews):
                 # Duplicate entry
                 raise "DuplicateComment", "Comment has already been submitted"
 
-        instance = BlogItemComment(id, comment, name, email, hide_email)
+        ip_address = self.REQUEST.get('REMOTE_ADDR', '')
+        user_agent = self.REQUEST.get('HTTP_USER_AGENT', '')
+        instance = BlogItemComment(id, comment, name, email, hide_email,
+                                   ip_address=ip_address,
+                                   user_agent=user_agent)
         toobj._setObject(id, instance)
 
         toobj.reCountComments()

@@ -28,12 +28,18 @@ class BlogItemComment(PeterbecomBase):
         {'id':'add_date',  'type':'date',   'mode':'w'},
         {'id':'hide_email','type':'boolean','mode':'w'},
         {'id':'approved',  'type':'boolean','mode':'w'},
+        {'id':'ip_address','type':'string', 'mode':'w'},
+        {'id':'user_agent','type':'string', 'mode':'w'},
 
         )
 
     security=ClassSecurityInfo()
 
-    def __init__(self, id, comment, name, email, hide_email=False):
+    ip_address = ''
+    user_agent = ''
+
+    def __init__(self, id, comment, name, email, hide_email=False,
+                 ip_address='', user_agent=''):
         """ init """
         self.id = id
         self.title = ''
@@ -43,6 +49,8 @@ class BlogItemComment(PeterbecomBase):
         self.add_date = DateTime()
         self.hide_email = not not hide_email
         self.approved = True
+        self.ip_address = ip_address
+        self.user_agent = user_agent
 
         self._cachedcomment = ''
 
