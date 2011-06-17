@@ -1198,7 +1198,7 @@ class Homepage(PeterbecomBase, SQLCreateTables, SQLReferers,
         q = string.translate(q, transtab, '?&!;()<=>*#[]{}')
 
         if not q:
-            res, yieldcount, time_taken = [], 0, 0.0
+            res, yieldcount, time_taken = {}, 0, 0.0
         else:
             res, yieldcount, time_taken = self.getSearchResults(q, meta_types)
             logging.info("Q: %r (took %s seconds to find %s items)" % (q, time_taken, yieldcount))
@@ -1219,7 +1219,6 @@ class Homepage(PeterbecomBase, SQLCreateTables, SQLReferers,
         catalog = self.getCatalog()
         sR = catalog.searchResults
         t0 = time.time()
-
 
         def advanced_q(q):
             parts = [x.strip() for x in q.split() if x.lower() not in ('and','or')]
