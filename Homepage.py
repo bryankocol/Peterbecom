@@ -1197,8 +1197,11 @@ class Homepage(PeterbecomBase, SQLCreateTables, SQLReferers,
         transtab = string.maketrans('/ ','_ ')
         q = string.translate(q, transtab, '?&!;()<=>*#[]{}')
 
-        res, yieldcount, time_taken = self.getSearchResults(q, meta_types)
-        logging.info("Q: %r (took %s seconds to find %s items)" % (q, time_taken, yieldcount))
+        if not q:
+            res, yieldcount, time_taken = [], 0, 0.0
+        else:
+            res, yieldcount, time_taken = self.getSearchResults(q, meta_types)
+            logging.info("Q: %r (took %s seconds to find %s items)" % (q, time_taken, yieldcount))
 
         if yieldcount < 1 and len(q.split()) >= 2:
             q = ' or '.join(q.split(' '))
