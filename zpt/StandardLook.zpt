@@ -54,7 +54,7 @@ little things that concern him." tal:attributes="content here/getMetaDescription
 </script>
 </tal:block>
 
-<style type="text/css">
+<style type="text/css" tal:replace="nothing">
 #donecalad {
   position:absolute;
   top:49px;
@@ -73,42 +73,17 @@ little things that concern him." tal:attributes="content here/getMetaDescription
 #donecalad p.third { float:right; font-size:80%;}
 </style>
 
-<style type="text/css" tal:replace="nothing">
-/* From Chris */
-#donecalad {
-background-color:#EFEFEF;
-border:2px solid #993333;
-float:left;
-left:192px;
-padding:5px 15px;
-position:relative;
-top:20px;
-width:340px;
-}
-
-p.first img {
-float:left;
-padding-right:10px;
-}
-
-
-#donecalad p.first {
-font-size:14px;
-margin:0;
-padding-top:5px;
-}
-
-
-#donecalad p.third {
-float:right;
-font-size:75%;
-margin-top: 7px;
-}
-
-#donecalad p.second {
-font-weight:bold;
-margin-top:3px;
-padding-bottom:5px;
+<style type="text/css">
+#kwisslewidget {
+  position:absolute;
+  top:49px;
+  right:10px;
+  background-color:#efefef;
+  width:590px;
+  border:1px solid #993333;
+  padding:3px 6px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 </style>
 
@@ -148,7 +123,7 @@ python:request.get('q','')"/>&nbsp;<input type="submit" value="Go"/>
   </span>
 </div>
 
-<div id="donecalad">
+<div id="donecalad" tal:replace="nothing">
 <p class="zeroth">&larr; this is not a commercial ad</p>
 <p class="first"><a href="http://donecal.com/" title="A timesheet/time tracker for remembering what you've done"><img style="float:left; padding-right:5px;"
 tal:attributes="src python:here.getMiscAlias('/misc_/Peterbecom/misc/icon_57x57.png')" alt="DoneCal logo" border="0" /></a>
@@ -158,6 +133,7 @@ Or just want to know how long time you've spent on your projects?</p>
 <p class="second"><a href="http://donecal.com/" title="A timesheet/time tracker for remembering what you've done">Check out DoneCal</a></p>
 </div>
 
+<script src="//cdn.kwissle.com/widget.js"></script>
 
 </div>
 
