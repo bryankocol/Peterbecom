@@ -258,7 +258,7 @@ div.comment {
 
 /* Thank you http://spritegen.website-performance.org/ */
 #leftcontent div.m_item {
-   background-image: url(/misc_/Peterbecom/menu/sprite-v2.gif);
+   background-image: url(/misc_/Peterbecom/menu/sprite-v3.gif);
    background-repeat:no-repeat;
    padding:0 0 0 45px;
 }
@@ -269,7 +269,7 @@ div.comment {
 #issuetrackerproduct_menuimage { background-position: 0 -340px; } 
 #kungfu_menuimage { background-position: 0 -409px; } 
 #photos_menuimage { background-position: 0 -489px; } 
-#zope_menuimage { background-position: 0 -574px; } 
+#kwissle_menuimage { background-position: 0 -574px; } 
 #twitter_menuimage { background-position: 0 -633px; }
 /* exceptions */
 #issuetrackerproduct_menuimage a.mi { padding-left:40px }	 
