@@ -1147,6 +1147,10 @@ class PeterbeBlogItem(PeterbecomBase, SQLBlogItemViews):
             raise "BadComment", "Comment not acceptable"
 
 
+        # Temporary Hack, 29 Aug 2011
+        # Make all comments unapproved
+        obj.setUnapproved()
+
         u = toobj.absolute_url()+'#%s'%id
         obj.index_object()
 
