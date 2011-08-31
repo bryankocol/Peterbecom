@@ -1074,8 +1074,11 @@ class PeterbeBlogItem(PeterbecomBase, SQLBlogItemViews):
                 # Duplicate entry
                 raise "DuplicateComment", "Comment has already been submitted"
 
-        ip_address = self.REQUEST.get('REMOTE_ADDR', '')
+        ip_address = self.REQUEST.get('REMOTE_ADDR',
+          self.REQUEST.get('HTTP_X_REAL_IP', ''))
         user_agent = self.REQUEST.get('HTTP_USER_AGENT', '')
+        logging.info('ip_address=%r' % ip_address)
+        logging.info('user_agent=%r' % user_agent)
         instance = BlogItemComment(id, comment, name, email, hide_email,
                                    ip_address=ip_address,
                                    user_agent=user_agent)
