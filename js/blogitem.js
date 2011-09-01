@@ -21,10 +21,12 @@ function __fillInForm(f, details) {
   var name = details[0];
   var email = details[1];
   var hide_email = parseInt(details[2]);
+  var xsrf = details[3];
 
   if (name) $('input[name="name"]', f).val(name);
   if (email) $('input[name="email"]', f).val(email);
   if (hide_email) $('input[name="hide_email:boolean"]', f).attr('checked','checked');
+  if (xsrf) $('input[name="xsrf"]', f).val(xsrf);
 }
 
 
@@ -33,27 +35,29 @@ $(function() {
    var _got_comment_cookie=false;
    function _get_commit_cookie() {
       $.get('/getCommentCookie', {rnd:Math.random()}, function(resp) {
-	 if (resp && resp.split('|').length >2) {
-	    __fillInForm(f, resp.split('|'));
-	 }
+         if (resp && resp.split('|').length >3) {
+            __fillInForm(f, resp.split('|'));
+         }
       });
    }
 
    var f = $('#addcommentform');
-   if ($('input[name="name"]', f).val() == '' && $('input[name="email"]', f).val() == '') {
+   if ($('input[name="name"]', f).val() == ''
+       && $('input[name="email"]', f).val() == ''
+       && $('input[name="xsrf"]', f).val() == '') {
       f.fadeTo(0, 0.3).bind('mouseover', function() {
-	 $(this).unbind('mouseover').fadeTo(400, 1.0);
-	 if (_got_comment_cookie) return;
-	 _got_comment_cookie = true;
-	 _get_commit_cookie();
+         $(this).unbind('mouseover').fadeTo(400, 1.0);
+         if (_got_comment_cookie) return;
+         _got_comment_cookie = true;
+         _get_commit_cookie();
       });
 
       $(window).bind('scroll', function() {
-	 $(window).unbind('scroll');
-	 if (_got_comment_cookie) return;
-	 f.fadeTo(400, 1.0);
-	 _got_comment_cookie = true;
-	 _get_commit_cookie();
+         $(window).unbind('scroll');
+         if (_got_comment_cookie) return;
+         f.fadeTo(400, 1.0);
+         _got_comment_cookie = true;
+         _get_commit_cookie();
 
       });
 

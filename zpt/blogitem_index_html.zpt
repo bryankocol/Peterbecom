@@ -105,28 +105,6 @@ tal:replace="structure python:cat['image'].tag(border='0')" />
 </div>
 </tal:block>
 
-<tal:block condition="options/show_chitika_ad|nothing">
-<script type="text/javascript">
-ch_client = "peterbe";
-ch_width = 728;
-ch_height = 90;
-ch_type = "mpu";
-ch_sid = "Chitika Default";
-ch_color_site_link = "#0000CC";
-ch_color_title = "#0000CC";
-ch_color_border = "#FFFFFF";
-ch_color_text = "#000000";
-ch_color_bg = "#FFFFFF";
-</script>
-<script src="http://scripts.chitika.net/eminimalls/amm.js" type="text/javascript">
-</script>
-</tal:block>
-
-
-<tal:comment replace="nothing">
-<div style="float:right" tal:content="structure here/amazon_ad_iframe_code">
-</div>
-</tal:comment>
 
 
 <h4 tal:content="structure python:here.showPubDate(html=1)">Date</h4>
@@ -136,13 +114,6 @@ ch_color_bg = "#FFFFFF";
 <p class="text" tal:replace="structure here/showText">The text...</p>
 
 <br />
-<tal:comment replace="nothing">
-<tal:block condition="not:here/isMobileVersion">
-<tal:block condition="python:request.get('HTTP_X_GEO') in ['US','CA','GB']">
-<iframe src="http://rcm.amazon.com/e/cm?t=crosstips-20&o=1&p=12&l=ur1&category=kindle&banner=1RR50DN6TK7D02JARP02&f=ifr" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
-</tal:block>
-</tal:block>
-</tal:comment>
 
 
 <br />

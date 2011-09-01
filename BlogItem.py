@@ -31,6 +31,7 @@ from spamfinder import hate_to_see
 
 #-------------------------------------------------------------------------------
 
+
 #-------------------------------------------------------------------------------
 
 manage_addPeterbeBlogItemForm = \
@@ -1007,6 +1008,8 @@ class PeterbeBlogItem(PeterbecomBase, SQLBlogItemViews):
                    captcha_number=None, captcha_id=None,
                    REQUEST=None):
         """ crate comment obj """
+        self.check_xsrf_cookie()
+
         name, email = name.strip(), email.strip()
         comment = comment.strip()
         if len(comment) > 8000:

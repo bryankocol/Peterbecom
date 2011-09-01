@@ -107,6 +107,11 @@ def same_type(obj1, obj2):
     return type(obj1)==type(obj2)
 
 
+class XSRFMissing(Exception):
+    pass
+
+class XSRFWrong(Exception):
+    pass
 
 #-----------------------------------------------------------------
 
@@ -2371,7 +2376,13 @@ class Homepage(PeterbecomBase, SQLCreateTables, SQLReferers,
         name = self.REQUEST.cookies.get('__blogcomment_name','')
         email = self.REQUEST.cookies.get('__blogcomment_email','')
         hide_email = self.checkHideEmailCheckbox()
-        return '%s|%s|%s' % (name, email, int(hide_email))
+        xsrf = self.xsrf_token()
+        referer = self.REQUEST.get("HTTP_REFERER")
+        if not referer:
+            return "Error: Not a valid referer"
+        if urlparse(referer)[1] != urlparse(self.REQUEST.URL)[1]:
+            return "Error: referer different from this domain"
+        return '%s|%s|%s|%s' % (name, email, int(hide_email), xsrf)
 
     def getOCURL(self, categories=None):
         """if categories is something like ['Wed development'] return
@@ -2383,6 +2394,59 @@ class Homepage(PeterbecomBase, SQLCreateTables, SQLReferers,
         for category in categories:
             url += '/oc-%s' % url_quote_plus(category)
         return url
+
+    def xsrf_token(self):
+        """The XSRF-prevention token for the current user/session.
+
+        To prevent cross-site request forgery, we set an '_xsrf' cookie
+        and include the same '_xsrf' value as an argument with all POST
+        requests. If the two do not match, we reject the form submission
+        as a potential forgery.
+
+        See http://en.wikipedia.org/wiki/Cross-site_request_forgery
+        """
+        if not hasattr(self, "_xsrf_token"):
+            token = self.REQUEST.cookies.get("_xsrf", None)
+            if not token:
+                import binascii
+                import uuid
+                token = binascii.b2a_hex(uuid.uuid4().bytes)
+                #expires_days = 30 if self.current_user else None
+                self.REQUEST.RESPONSE.setCookie('_xsrf', token, path='/')
+                #self.set_cookie("_xsrf", token, expires_days=expires_days)
+                #self.set_cookie(
+            self._xsrf_token = token
+        return self._xsrf_token
+
+    def check_xsrf_cookie(self):
+        """Verifies that the '_xsrf' cookie matches the '_xsrf' argument.
+
+        To prevent cross-site request forgery, we set an '_xsrf'
+        cookie and include the same value as a non-cookie
+        field with all POST requests. If the two do not match, we
+        reject the form submission as a potential forgery.
+
+        The _xsrf value may be set as either a form field named _xsrf
+        or in a custom HTTP header named X-XSRFToken or X-CSRFToken
+        (the latter is accepted for compatibility with Django).
+
+        See http://en.wikipedia.org/wiki/Cross-site_request_forgery
+
+        Prior to release 1.1.1, this check was ignored if the HTTP header
+        "X-Requested-With: XMLHTTPRequest" was present.  This exception
+        has been shown to be insecure and has been removed.  For more
+        information please see
+        http://www.djangoproject.com/weblog/2011/feb/08/security/
+        http://weblog.rubyonrails.org/2011/2/8/csrf-protection-bypass-in-ruby-on-rails
+        """
+        token = (self.REQUEST.get('xsrf') or
+                 self.REQUEST.get("X-Xsrftoken") or
+                 self.REQUEST.get("X-Csrftoken"))
+        if not token:
+            raise XSRFMissing("'xsrf' argument missing from POST")
+        if self.xsrf_token() != token:
+            raise XSRFWrong("XSRF cookie does not match POST argument")
+
 
     ##
     ## Wrapping index_html
